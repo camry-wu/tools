@@ -127,8 +127,23 @@ public class DateFieldFaker extends AbstractFieldFaker {
             int tmp = showmuch.indexOf('(');
             if (tmp != -1) {
                 int tmp2 = showmuch.indexOf(')', tmp);
-                long ltmp = Long.parseLong(showmuch.substring(tmp + 1, tmp2));
-                _value = new Date(ltmp);
+
+                // the initial value maybe long or 'yyyy-MM-dd HH:mm:ss'
+                String initialValue = showmuch.substring(tmp + 1, tmp2);
+
+                if (initialValue.length() >= 19) {              // yyyy-MM-dd HH:mm:ss
+                    SimpleDateFormat sdf = new SimpleDateFormat(FIX_VALUE_FORMAT);
+                    try {
+                        _value = sdf.parse(initialValue);
+                    } catch (ParseException e) {
+                        _value = getDateBefore1Day();
+                    }
+                } else if (initialValue.length() >= 13) {       // long
+                    long ltmp = Long.parseLong(initialValue);
+                    _value = new Date(ltmp);
+                } else {                                        // others, not defined
+                    _value = getDateBefore1Day();
+                }
 
                 showmuch = showmuch.substring(0, tmp);
             }
@@ -348,5 +363,14 @@ public class DateFieldFaker extends AbstractFieldFaker {
         return ret;
     }
 
+    /**
+     * get date before one day base on now.
+     *
+     * @return the date in yesterday
+     */
+    public static Date getDateBefore1Day() {
+        long now = System.currentTimeMillis();
+        return new Date(now - 24 * 60 * 60 * 1000);
+    }
 } // END: DateFieldFaker
 ///:~
