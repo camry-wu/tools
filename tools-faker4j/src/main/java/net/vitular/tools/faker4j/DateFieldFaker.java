@@ -41,6 +41,11 @@ public class DateFieldFaker extends AbstractFieldFaker {
     public static final int FORMAT_MODE_STRING = 3;
 
     /**
+     * date format of the calculated initial value.
+     */
+    public static final String INITIAL_VALUE_FORMAT = "yyyyMMdd HHmmss";
+
+    /**
      * date format of the fixed value.
      */
     public static final String FIX_VALUE_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -128,11 +133,13 @@ public class DateFieldFaker extends AbstractFieldFaker {
             if (tmp != -1) {
                 int tmp2 = showmuch.indexOf(')', tmp);
 
-                // the initial value maybe long or 'yyyy-MM-dd HH:mm:ss'
+                // the initial value maybe long or 'yyyyMMdd HHmmss'
+                // because the calculated variable cannot include '-'
+                //
                 String initialValue = showmuch.substring(tmp + 1, tmp2);
 
-                if (initialValue.length() >= 19) {              // yyyy-MM-dd HH:mm:ss
-                    SimpleDateFormat sdf = new SimpleDateFormat(FIX_VALUE_FORMAT);
+                if (initialValue.length() >= 15) {              // yyyyMMdd HHmmss
+                    SimpleDateFormat sdf = new SimpleDateFormat(INITIAL_VALUE_FORMAT);
                     try {
                         _value = sdf.parse(initialValue);
                     } catch (ParseException e) {
