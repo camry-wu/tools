@@ -41,6 +41,7 @@ public interface FakerConsts {
      */
     public static final String FILE_FAKER                       = "file.faker";
     public static final String FILE_QUIET                       = "file.quiet";
+    public static final String FILE_RECORD_TYPE_COUNT           = "file.record.type.count";
     public static final String FILE_RECORD_COUNT                = "file.record.count";
     public static final String FILE_OUTPUT_PATH                 = "file.output.path";
     public static final String FILE_HEADER                      = "file.header";

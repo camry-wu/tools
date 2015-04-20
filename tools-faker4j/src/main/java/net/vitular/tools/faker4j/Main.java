@@ -12,8 +12,11 @@
 package net.vitular.tools.faker4j;
 
 import java.io.*;
-import java.util.Properties;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * to-do main function for generating Test Data.
@@ -101,7 +104,6 @@ public final class Main {
      * @param args  running arguments
      */
     public static void main(final String[] args) {
-        long begin = System.currentTimeMillis();
 
         if (!parseArguments(args)) {
             usage();
@@ -155,23 +157,109 @@ public final class Main {
                 props.list(System.out);
             }
 
-            try {
-                fileFaker.generateFile();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-                System.exit(1);
-            } finally {
-                fileFaker.release();
+            boolean schedule = fakerContext.getBooleanProperty("global.schedule.enable", false);
+            if (schedule) {
+                executeSchedule(fileFaker);
+            } else {
+                executeOnce(fileFaker);
             }
-
         } else {
             usage();
         }
 
+        System.exit(0);
+    }
+
+    /**
+     * execute generate task in schedule.
+     *
+     * @param fileFaker file faker
+     */
+    private static void executeSchedule(final IFileFaker fileFaker) {
+        long begin = System.currentTimeMillis();
+
+        IFakerContext fakerContext = fileFaker.getFakerContext();
+
+        // initial
+        Timer timer = new Timer(true);
+
+        int period = fakerContext.getIntProperty("global.schedule.period", 60000);
+        int multiplePeriod = fakerContext.getIntProperty("global.schedule.multiple.period", 7200000);
+
+        Date firstDate = new Date(System.currentTimeMillis() + 60000);
+        Date multiFirstDate = new Date(System.currentTimeMillis() + 60000 + multiplePeriod);
+
+        timer.scheduleAtFixedRate(new ExeTask(fileFaker), firstDate, period);
+        timer.scheduleAtFixedRate(new UpTask(fileFaker), multiFirstDate, multiplePeriod);
+
+        // cancel
+        int duration = fakerContext.getIntProperty("global.schedule.duration", 36000000);
+        try {
+            Thread.sleep(duration);
+        } catch (InterruptedException ie) {
+        }
+
+        timer.cancel();
+        fileFaker.release();
+
         long end = System.currentTimeMillis();
         System.out.println(String.format("use time(milliseconds): %d [%d, %d]", (end - begin), begin, end));
+    }
 
-        System.exit(0);
+    static class ExeTask extends TimerTask {
+        private IFileFaker fileFaker;
+
+        ExeTask(final IFileFaker fileFaker) {
+            this.fileFaker = fileFaker;
+        }
+
+        public void run() {
+            try {
+                fileFaker.generateFile();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static class UpTask extends TimerTask {
+        private IFileFaker fileFaker;
+        private int multiple = 1;
+        private int recordTypeCount = 1;
+
+        UpTask(final IFileFaker fileFaker) {
+            this.fileFaker = fileFaker;
+            multiple = fileFaker.getFakerContext().getIntProperty("global.schedule.multiple", 1);
+            recordTypeCount = fileFaker.getRecordTypeCount();
+        }
+
+        public void run() {
+            for (int i = 0; i < recordTypeCount; i++) {
+                int rowSize = fileFaker.getRowSize(i) * multiple;
+                fileFaker.setRowSize(i, rowSize);
+            }
+        }
+    }
+
+    /**
+     * execute once.
+     *
+     * @param fileFaker file faker
+     */
+    private static void executeOnce(final IFileFaker fileFaker) {
+        long begin = System.currentTimeMillis();
+
+        try {
+            fileFaker.generateFile();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } finally {
+            fileFaker.release();
+        }
+
+        long end = System.currentTimeMillis();
+        System.out.println(String.format("use time(milliseconds): %d [%d, %d]", (end - begin), begin, end));
     }
 
     /**

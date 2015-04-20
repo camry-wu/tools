@@ -81,6 +81,15 @@ public class BlobRowFaker extends AbstractRowFaker {
         return bb;
     }
 
+    /**
+     * generate row.
+     *
+     * @return the new row instance
+     */
+    public Object next(final int recordType) {
+        return next();
+    }
+
     ///////// private methods ///////////
 } // END: BlobRowFaker
 ///:~

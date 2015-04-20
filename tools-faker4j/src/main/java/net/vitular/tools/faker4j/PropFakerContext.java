@@ -53,6 +53,41 @@ public class PropFakerContext extends AbstractFakerContext {
     }
 
     /**
+     * get faker config int property base on property key.
+     *
+     * @param propertyKey   property key
+     * @return property int value
+     */
+    public int getIntProperty(final String propertyKey, final int defaultValue) {
+        String p = _props.getProperty(propertyKey);
+        if (p == null || "".equals(p)) {
+            return defaultValue;
+        }
+
+        try {
+            return Integer.parseInt(p);
+        } catch (Exception e) {
+            System.err.println(String.format("illegal int property format [%s=%s].", propertyKey, p));
+            return defaultValue;
+        }
+    }
+
+    /**
+     * get faker config boolean property base on property key.
+     *
+     * @param propertyKey   property key
+     * @return property boolean value
+     */
+    public boolean getBooleanProperty(final String propertyKey, final boolean defaultValue) {
+        String p = _props.getProperty(propertyKey);
+        if (p == null || "".equals(p)) {
+            return defaultValue;
+        }
+
+        return Boolean.parseBoolean(p);
+    }
+
+    /**
      * get faker expression of the indicated field.
      *
      * @param fieldName     field name

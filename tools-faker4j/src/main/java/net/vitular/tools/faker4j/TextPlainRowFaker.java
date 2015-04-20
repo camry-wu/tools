@@ -25,23 +25,30 @@ import java.text.MessageFormat;
 public class TextPlainRowFaker extends AbstractRowFaker {
 
     /**
+     * record type count.
+     */
+    private int _iRecordTypeCount = 1;
+
+    /**
      * format string.
      */
-    private String _sFormat;
+    private String[] _asFormat;
 
     /**
      * message format.
      */
-    private MessageFormat _msgFormat;
+    private MessageFormat[] _aMsgFormat;
 
     /**
      * constructor.
      *
-     * @param fakerContext  faker context
+     * @param fakerContext      faker context
+     * @param recordTypeCount   record type count
      */
-    public TextPlainRowFaker(final IFakerContext fakerContext) {
+    public TextPlainRowFaker(final IFakerContext fakerContext, final int recordTypeCount) {
         super(fakerContext);
 
+        _iRecordTypeCount = recordTypeCount;
         initial();
     }
 
@@ -49,9 +56,17 @@ public class TextPlainRowFaker extends AbstractRowFaker {
      * initial row faker.
      */
     private void initial() {
-        _sFormat = getFakerContext().getProperty(FakerConsts.RECORD_FORMAT);
+        List<IFieldFaker> fieldFakerList = getFieldFakerList();
+        assert (fieldFakerList != null && fieldFakerList.size() > 0);
 
-        _msgFormat = new MessageFormat(_sFormat);
+        _asFormat = new String[_iRecordTypeCount];
+        _aMsgFormat = new MessageFormat[_iRecordTypeCount];
+
+        for (int i = 0; i < _iRecordTypeCount; i++) {
+            _asFormat[i] = getFakerContext().getProperty(String.format("%s.%d", FakerConsts.RECORD_FORMAT, i));
+            _aMsgFormat[i] = new MessageFormat(_asFormat[i]);
+        }
+
     }
 
     /**
@@ -60,8 +75,30 @@ public class TextPlainRowFaker extends AbstractRowFaker {
      * @return the new row instance
      */
     public Object next() {
+
+        List<String> faker_value_list = generateFieldList();
+        return _aMsgFormat[0].format(faker_value_list.toArray());
+    }
+
+    /**
+     * generate row.
+     *
+     * @return the new row instance
+     */
+    public Object next(final int recordType) {
+        List<String> faker_value_list = generateFieldList();
+        return _aMsgFormat[recordType].format(faker_value_list.toArray());
+    }
+
+    ///////// private methods ///////////
+
+    /**
+     * generate field value list.
+     *
+     * @return value list
+     */
+    private List<String> generateFieldList() {
         List<IFieldFaker> fieldFakerList = getFieldFakerList();
-        assert (fieldFakerList != null && fieldFakerList.size() > 0);
 
         List<String> faker_value_list = new ArrayList<String> (8);
         for (int i = 0, len = fieldFakerList.size(); i < len; i++) {
@@ -84,9 +121,7 @@ public class TextPlainRowFaker extends AbstractRowFaker {
             faker_value_list.add(fieldValue);
         }
 
-        return _msgFormat.format(faker_value_list.toArray());
+        return faker_value_list;
     }
-
-    ///////// private methods ///////////
 } // END: TextPlainRowFaker
 ///:~

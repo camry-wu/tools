@@ -200,7 +200,8 @@ public class DateFieldFaker extends AbstractFieldFaker {
      */
     protected Object generateCalculatedValue() {
         if (_relatedField == null) {
-            return new Date();                          // if no related field find, return Now
+            _value = new Date();
+            return _value;                          // if no related field find, return Now
         }
 
         Object relatedDate = _relatedField.getValue();

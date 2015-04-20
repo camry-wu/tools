@@ -88,6 +88,22 @@ public interface IFakerContext {
     public String getProperty(final String propertyKey);
 
     /**
+     * get faker config int property base on property key.
+     *
+     * @param propertyKey   property key
+     * @return property int value
+     */
+    public int getIntProperty(final String propertyKey, final int defaultValue);
+
+    /**
+     * get faker config boolean property base on property key.
+     *
+     * @param propertyKey   property key
+     * @return property boolean value
+     */
+    public boolean getBooleanProperty(final String propertyKey, final boolean defaultValue);
+
+    /**
      * get faker expression of the field.
      *
      * @param fieldName     field name

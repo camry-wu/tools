@@ -38,5 +38,28 @@ public interface IFileFaker {
      * release resources.
      */
     public void release();
+
+    /**
+     * get record type count.
+     *
+     * @return record type count
+     */
+    public int getRecordTypeCount();
+
+    /**
+     * set row size for the indicated record type.
+     *
+     * @param recordType    record type
+     * @param rowSize       row size
+     */
+    public void setRowSize(final int recordType, final int rowSize);
+
+    /**
+     * get row size for the indicated record type.
+     *
+     * @param recordType    record type
+     * @return row size of the record type
+     */
+    public int getRowSize(final int recordType);
 } // END: IFileFaker
 ///:~

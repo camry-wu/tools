@@ -25,5 +25,12 @@ public interface IRowFaker {
      * @return the new row instance
      */
     public Object next();
+
+    /**
+     * generate row.
+     *
+     * @return the new row instance
+     */
+    public Object next(final int recordType);
 } // END: IRowFaker
 ///:~

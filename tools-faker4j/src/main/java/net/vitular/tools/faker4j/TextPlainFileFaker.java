@@ -138,7 +138,7 @@ public class TextPlainFileFaker extends AbstractFileFaker {
      * @return IRowFaker
      */
     protected IRowFaker createRowFaker(final IFakerContext fakerContext) {
-        return new TextPlainRowFaker(fakerContext);
+        return new TextPlainRowFaker(fakerContext, getRecordTypeCount());
     }
     ////// private methods ////////
 } // END: TextPlainFileFaker

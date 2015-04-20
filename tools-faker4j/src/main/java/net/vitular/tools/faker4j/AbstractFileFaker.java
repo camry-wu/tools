@@ -42,9 +42,19 @@ public abstract class AbstractFileFaker implements IFileFaker {
     private IFakerContext _fakerContext;
 
     /**
+     * record type count.
+     */
+    private int _iRecordTypeCount = 1;
+
+    /**
      * row size.
      */
-    private int _iRowSize;
+    private int _aiRowSize[];
+
+    /**
+     * total row size.
+     */
+    private int _iTotalRowSize = 0;
 
     /**
      * if quiet, donot print out process.
@@ -55,8 +65,11 @@ public abstract class AbstractFileFaker implements IFileFaker {
     protected void setRowFaker(final IRowFaker rowFaker) { _rowFaker = rowFaker; }
     protected IRowFaker getRowFaker() { return _rowFaker; }
 
-    public void setRowSize(final int rowSize) { _iRowSize = rowSize; }
-    public int getRowSize() { return _iRowSize; }
+    public void setRecordTypeCount(final int recordTypeCount) { _iRecordTypeCount = recordTypeCount; }
+    public int getRecordTypeCount() { return _iRecordTypeCount; }
+
+    public void setRowSize(final int recordType, final int rowSize) { _aiRowSize[recordType] = rowSize; }
+    public int getRowSize(final int recordType) { return _aiRowSize[recordType]; }
 
     /**
      * get faker context.
@@ -75,19 +88,26 @@ public abstract class AbstractFileFaker implements IFileFaker {
 
         _fakerContext.setFileFaker(this);
 
+        // record type count
+        _iRecordTypeCount = _fakerContext.getIntProperty(FakerConsts.FILE_RECORD_TYPE_COUNT, 1);
+
+        // event count of each record type
+        _aiRowSize = new int[_iRecordTypeCount];
         if (rowSize > 0) {
-            _iRowSize = rowSize;
+            for (int i = 0; i < _iRecordTypeCount; i++) {
+                _aiRowSize[i] = rowSize;
+                _iTotalRowSize += rowSize;
+            }
         } else {
-            // get row size
-            String sRowSize = _fakerContext.getProperty(FakerConsts.FILE_RECORD_COUNT);
-            _iRowSize = Integer.parseInt(sRowSize);
+            for (int i = 0; i < _iRecordTypeCount; i++) {
+                // get row size
+                _aiRowSize[i] = _fakerContext.getIntProperty(String.format("%s.%d", FakerConsts.FILE_RECORD_COUNT, i), 1);
+                _iTotalRowSize += _aiRowSize[i];
+            }
         }
 
         // quiet
-        String sQuiet = _fakerContext.getProperty(FakerConsts.FILE_QUIET);
-        if (sQuiet != null && !"".equals(sQuiet)) {
-            _bQuiet = Boolean.parseBoolean(sQuiet);
-        }
+        _bQuiet = _fakerContext.getBooleanProperty(FakerConsts.FILE_QUIET, false);
     }
 
     /**
@@ -95,14 +115,26 @@ public abstract class AbstractFileFaker implements IFileFaker {
      */
     public void generateFile() {
 
-        int percent = (int) _iRowSize / 100;
+        int percent = (int) _iTotalRowSize / 100;
         if (percent <= 0) {
             percent = 1;
         }
 
+        int outputCount[] = new int[_iRecordTypeCount];
+        System.arraycopy(_aiRowSize, 0, outputCount, 0, _iRecordTypeCount);
+
+        int currentType = 0;
+
+        int i = 0;
         int j = 0;
-        for (int i = 0; i < _iRowSize; i++) {
-            Object row = _rowFaker.next();
+        while (i < _iTotalRowSize) {
+
+            if (outputCount[currentType] <= 0) {
+                currentType = (currentType + 1) % _iRecordTypeCount;
+                continue;
+            }
+
+            Object row = _rowFaker.next(currentType);
 
             if (((int) (i + 1) % percent) == 0) {
                 j++;
@@ -116,6 +148,10 @@ public abstract class AbstractFileFaker implements IFileFaker {
             if (!_fakerContext.isDebug()) {
                 writeRow(row);
             }
+
+            outputCount[currentType] = outputCount[currentType] - 1;
+            currentType = (currentType + 1) % _iRecordTypeCount;
+            i++;
         }
 
         if (!_bQuiet) {
@@ -176,7 +212,7 @@ public abstract class AbstractFileFaker implements IFileFaker {
     }
 
     /**
-     * get the date the file generated.
+     * get the date the file currentd.
      *
      * @param props     config properties
      * @return datetime long value

@@ -118,6 +118,15 @@ public class DBRowFaker extends AbstractRowFaker {
         return row;
     }
 
+    /**
+     * generate row.
+     *
+     * @return the new row instance
+     */
+    public Object next(final int recordType) {
+        return next();
+    }
+
     ///////// private methods ///////////
 } // END: DBRowFaker
 ///:~
