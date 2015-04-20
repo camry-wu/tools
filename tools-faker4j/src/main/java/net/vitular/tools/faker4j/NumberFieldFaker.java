@@ -90,6 +90,9 @@ public class NumberFieldFaker extends AbstractFieldFaker {
 
             if (smin != null && !"".equals(smin)) {
                 _lMin = Long.valueOf(smin);
+                if (_lMin <= 0) {
+                    throw new IllegalArgumentException(String.format("faker expression error: the min value should bigger then 0 [%s]", limit));
+                }
             }
 
             if (smax != null && !"".equals(smax)) {

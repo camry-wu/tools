@@ -46,6 +46,11 @@ public abstract class AbstractFileFaker implements IFileFaker {
      */
     private int _iRowSize;
 
+    /**
+     * if quiet, donot print out process.
+     */
+    private boolean _bQuiet = false;
+
     // getter and setter
     protected void setRowFaker(final IRowFaker rowFaker) { _rowFaker = rowFaker; }
     protected IRowFaker getRowFaker() { return _rowFaker; }
@@ -77,6 +82,12 @@ public abstract class AbstractFileFaker implements IFileFaker {
             String sRowSize = _fakerContext.getProperty(FakerConsts.FILE_RECORD_COUNT);
             _iRowSize = Integer.parseInt(sRowSize);
         }
+
+        // quiet
+        String sQuiet = _fakerContext.getProperty(FakerConsts.FILE_QUIET);
+        if (sQuiet != null && !"".equals(sQuiet)) {
+            _bQuiet = Boolean.parseBoolean(sQuiet);
+        }
     }
 
     /**
@@ -96,9 +107,9 @@ public abstract class AbstractFileFaker implements IFileFaker {
             if (((int) (i + 1) % percent) == 0) {
                 j++;
                 if (j % 10 == 0) {
-                    System.out.print(j / 10);
+                    print(j / 10);
                 } else {
-                    System.out.print("=");
+                    print("=");
                 }
             }
 
@@ -106,7 +117,23 @@ public abstract class AbstractFileFaker implements IFileFaker {
                 writeRow(row);
             }
         }
-        System.out.println();
+
+        if (!_bQuiet) {
+            System.out.println();
+        }
+    }
+
+    /**
+     * print something.
+     *
+     * @param o the output string
+     */
+    private void print(Object o) {
+        if (_bQuiet) {
+            return;
+        } else {
+            System.out.print(String.valueOf(o));
+        }
     }
 
     /**

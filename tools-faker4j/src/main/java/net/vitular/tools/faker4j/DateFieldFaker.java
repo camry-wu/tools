@@ -51,6 +51,11 @@ public class DateFieldFaker extends AbstractFieldFaker {
     public static final String FIX_VALUE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * initial date as current time.
+     */
+    public static final String NOW = "NOW";
+
+    /**
      * date format mode.
      */
     private int _iFormatMode;
@@ -138,17 +143,19 @@ public class DateFieldFaker extends AbstractFieldFaker {
                 //
                 String initialValue = showmuch.substring(tmp + 1, tmp2);
 
-                if (initialValue.length() >= 15) {              // yyyyMMdd HHmmss
+                if (initialValue.length() >= 15) {                      // yyyyMMdd HHmmss
                     SimpleDateFormat sdf = new SimpleDateFormat(INITIAL_VALUE_FORMAT);
                     try {
                         _value = sdf.parse(initialValue);
                     } catch (ParseException e) {
                         _value = getDateBefore1Day();
                     }
-                } else if (initialValue.length() >= 13) {       // long
+                } else if (initialValue.length() >= 13) {               // long
                     long ltmp = Long.parseLong(initialValue);
                     _value = new Date(ltmp);
-                } else {                                        // others, not defined
+                } else if (initialValue.equalsIgnoreCase(NOW)) {        // NOW
+                    _value = new Date();
+                } else {                                                // others, not defined
                     _value = getDateBefore1Day();
                 }
 
@@ -192,7 +199,9 @@ public class DateFieldFaker extends AbstractFieldFaker {
      * @return the calculated value
      */
     protected Object generateCalculatedValue() {
-        assert (_relatedField != null);
+        if (_relatedField == null) {
+            return new Date();                          // if no related field find, return Now
+        }
 
         Object relatedDate = _relatedField.getValue();
         if (!(relatedDate instanceof Date)) {

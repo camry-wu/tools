@@ -11,7 +11,8 @@
  */
 package net.vitular.tools.faker4j;
 
-import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 
@@ -26,7 +27,7 @@ public class TextPlainFileFaker extends AbstractFileFaker {
     /**
      * output stream.
      */
-    private FileOutputStream _fileOutputStream = null;
+    private BufferedWriter _fileOutputStream = null;
 
     /**
      * header.
@@ -63,12 +64,15 @@ public class TextPlainFileFaker extends AbstractFileFaker {
 
         if (!ctx.isDebug()) {
             try {
-                _fileOutputStream = new FileOutputStream(filepath, false);
+                _fileOutputStream = new BufferedWriter(new FileWriter(filepath, true));
 
                 if (_sHeader != null && !"".equals(_sHeader)) {
                     writeLine(_sHeader);
                 }
             } catch (FileNotFoundException e) {
+                String err = String.format("cannot open file: %s [base on file_output_path: %s].", filepath, sDestURL);
+                throw new IllegalArgumentException(err, e);
+            } catch (IOException e) {
                 String err = String.format("cannot find path: %s [base on file_output_path: %s].", filepath, sDestURL);
                 throw new IllegalArgumentException(err, e);
             }
@@ -110,9 +114,9 @@ public class TextPlainFileFaker extends AbstractFileFaker {
             return;
         }
 
-        String aline = line + "\n";
         try {
-            _fileOutputStream.write(aline.getBytes());
+            _fileOutputStream.write(line, 0, line.length());
+            _fileOutputStream.newLine();
         } catch (IOException e) {
             _logger.error("catch IOException while write line to file.", e);
         }
