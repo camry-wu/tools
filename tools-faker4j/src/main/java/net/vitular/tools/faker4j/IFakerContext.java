@@ -96,6 +96,14 @@ public interface IFakerContext {
     public int getIntProperty(final String propertyKey, final int defaultValue);
 
     /**
+     * get faker config long property base on property key.
+     *
+     * @param propertyKey   property key
+     * @return property long value
+     */
+    public long getLongProperty(final String propertyKey, final long defaultValue);
+
+    /**
      * get faker config boolean property base on property key.
      *
      * @param propertyKey   property key

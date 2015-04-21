@@ -68,8 +68,21 @@ public abstract class AbstractFileFaker implements IFileFaker {
     public void setRecordTypeCount(final int recordTypeCount) { _iRecordTypeCount = recordTypeCount; }
     public int getRecordTypeCount() { return _iRecordTypeCount; }
 
-    public void setRowSize(final int recordType, final int rowSize) { _aiRowSize[recordType] = rowSize; }
+    public void setRowSize(final int recordType, final int rowSize) {
+        _aiRowSize[recordType] = rowSize;
+        resetTotalRowSize();
+    }
     public int getRowSize(final int recordType) { return _aiRowSize[recordType]; }
+
+    /**
+     * reset total row size.
+     */
+    private void resetTotalRowSize() {
+        _iTotalRowSize = 0;
+        for (int i = 0; i < _iRecordTypeCount; i++) {
+            _iTotalRowSize += _aiRowSize[i];
+        }
+    }
 
     /**
      * get faker context.
@@ -83,7 +96,6 @@ public abstract class AbstractFileFaker implements IFileFaker {
      * @param fakerContext  faker context
      */
     public AbstractFileFaker(final int rowSize, final IFakerContext fakerContext) {
-
         _fakerContext = fakerContext;
 
         _fakerContext.setFileFaker(this);
@@ -96,15 +108,16 @@ public abstract class AbstractFileFaker implements IFileFaker {
         if (rowSize > 0) {
             for (int i = 0; i < _iRecordTypeCount; i++) {
                 _aiRowSize[i] = rowSize;
-                _iTotalRowSize += rowSize;
             }
         } else {
             for (int i = 0; i < _iRecordTypeCount; i++) {
                 // get row size
                 _aiRowSize[i] = _fakerContext.getIntProperty(String.format("%s.%d", FakerConsts.FILE_RECORD_COUNT, i), 1);
-                _iTotalRowSize += _aiRowSize[i];
             }
+
         }
+
+        resetTotalRowSize();
 
         // quiet
         _bQuiet = _fakerContext.getBooleanProperty(FakerConsts.FILE_QUIET, false);
@@ -156,6 +169,85 @@ public abstract class AbstractFileFaker implements IFileFaker {
 
         if (!_bQuiet) {
             System.out.println();
+        }
+    }
+
+    /**
+     * generate file in the indicated period time.
+     *
+     * @param period    unit is milliseconds
+     */
+    public void generateFile(final long period) {
+        if (_fakerContext.isDebug()) {
+            return;
+        }
+
+        int percent = (int) _iTotalRowSize / 100;
+        if (percent <= 0) {
+            percent = 1;
+        }
+
+        // how many time to make one row?
+        long timeToMakeOneRow = (period * 1000000000L) / _iTotalRowSize;
+        long waitNano = 0L;
+
+        int outputCount[] = new int[_iRecordTypeCount];
+        System.arraycopy(_aiRowSize, 0, outputCount, 0, _iRecordTypeCount);
+
+        int currentType = 0;
+
+        int i = 0;
+        int j = 0;
+        while (i < _iTotalRowSize) {
+            if (outputCount[currentType] <= 0) {
+                currentType = (currentType + 1) % _iRecordTypeCount;
+                continue;
+            }
+
+            long begin = System.nanoTime();
+
+            Object row = _rowFaker.next(currentType);
+            writeRow(row);
+
+            if (!_bQuiet) {
+                if (((int) (i + 1) % percent) == 0) {
+                    j++;
+                    if (j % 10 == 0) {
+                        print(j / 10);
+                    } else {
+                        print("=");
+                    }
+                }
+            }
+
+            outputCount[currentType] = outputCount[currentType] - 1;
+            currentType = (currentType + 1) % _iRecordTypeCount;
+            i++;
+
+            long spend = System.nanoTime() - begin;
+            waitNano = timeToMakeOneRow - spend + waitNano;
+            if (waitNano > 0) {
+                sleepNano(waitNano);
+                waitNano = 0;
+            }
+        }
+
+        if (!_bQuiet) {
+            System.out.println();
+        }
+    }
+
+    /**
+     * sleep for nano time.
+     *
+     * @param nanoTime nano time
+     */
+    private void sleepNano(final long nanoTime) {
+        long begin = System.nanoTime();
+        while (true) {
+            if (System.nanoTime() - begin >= nanoTime) {
+                break;
+            }
         }
     }
 

@@ -157,9 +157,9 @@ public final class Main {
                 props.list(System.out);
             }
 
-            boolean schedule = fakerContext.getBooleanProperty("global.schedule.enable", false);
-            if (schedule) {
-                executeSchedule(fileFaker);
+            boolean repeat = fakerContext.getBooleanProperty("global.repeat.enable", false);
+            if (repeat) {
+                executeRepeat(fileFaker);
             } else {
                 executeOnce(fileFaker);
             }
@@ -171,39 +171,53 @@ public final class Main {
     }
 
     /**
-     * execute generate task in schedule.
+     * execute generate task in repeat mode.
      *
      * @param fileFaker file faker
      */
-    private static void executeSchedule(final IFileFaker fileFaker) {
+    private static void executeRepeat(final IFileFaker fileFaker) {
         long begin = System.currentTimeMillis();
 
         IFakerContext fakerContext = fileFaker.getFakerContext();
 
-        // initial
-        Timer timer = new Timer(true);
+        long period = fakerContext.getLongProperty("global.repeat.execute.period", 60000);
+        int repeatTimes = fakerContext.getIntProperty("global.repeat.execute.times", 7200);
+        int factor = fakerContext.getIntProperty("global.repeat.growth.factor", 1);
+        int growthTimes = fakerContext.getIntProperty("global.repeat.growth.times", 0);
 
-        int period = fakerContext.getIntProperty("global.schedule.period", 60000);
-        int multiplePeriod = fakerContext.getIntProperty("global.schedule.multiple.period", 7200000);
+        do {
+            for (int i = 0; i < repeatTimes; i++) {
+                try {
+                    fileFaker.generateFile(period);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
 
-        Date firstDate = new Date(System.currentTimeMillis() + 60000);
-        Date multiFirstDate = new Date(System.currentTimeMillis() + 60000 + multiplePeriod);
+            if (growthTimes > 0) {
+                grow(fileFaker, factor);
+            }
+            growthTimes--;
+        } while (growthTimes >= 0);
 
-        timer.scheduleAtFixedRate(new ExeTask(fileFaker), firstDate, period);
-        timer.scheduleAtFixedRate(new UpTask(fileFaker), multiFirstDate, multiplePeriod);
-
-        // cancel
-        int duration = fakerContext.getIntProperty("global.schedule.duration", 36000000);
-        try {
-            Thread.sleep(duration);
-        } catch (InterruptedException ie) {
-        }
-
-        timer.cancel();
         fileFaker.release();
 
         long end = System.currentTimeMillis();
         System.out.println(String.format("use time(milliseconds): %d [%d, %d]", (end - begin), begin, end));
+    }
+
+    /**
+     * grow row size of FileFaker.
+     *
+     * @param fileFaker the file faker
+     * @param factor    the growth factor
+     */
+    private static void grow(final IFileFaker fileFaker, final int factor) {
+        int recordTypeCount = fileFaker.getRecordTypeCount();
+        for (int i = 0; i < recordTypeCount; i++) {
+            int rowSize = fileFaker.getRowSize(i) * factor;
+            fileFaker.setRowSize(i, rowSize);
+        }
     }
 
     static class ExeTask extends TimerTask {
@@ -218,25 +232,6 @@ public final class Main {
                 fileFaker.generateFile();
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
-            }
-        }
-    }
-
-    static class UpTask extends TimerTask {
-        private IFileFaker fileFaker;
-        private int multiple = 1;
-        private int recordTypeCount = 1;
-
-        UpTask(final IFileFaker fileFaker) {
-            this.fileFaker = fileFaker;
-            multiple = fileFaker.getFakerContext().getIntProperty("global.schedule.multiple", 1);
-            recordTypeCount = fileFaker.getRecordTypeCount();
-        }
-
-        public void run() {
-            for (int i = 0; i < recordTypeCount; i++) {
-                int rowSize = fileFaker.getRowSize(i) * multiple;
-                fileFaker.setRowSize(i, rowSize);
             }
         }
     }

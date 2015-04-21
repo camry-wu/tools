@@ -35,6 +35,13 @@ public interface IFileFaker {
     public void generateFile();
 
     /**
+     * generate file in the indicated period time.
+     *
+     * @param period    unit is milliseconds
+     */
+    public void generateFile(final long period);
+
+    /**
      * release resources.
      */
     public void release();

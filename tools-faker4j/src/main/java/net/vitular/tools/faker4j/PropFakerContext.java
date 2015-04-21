@@ -73,6 +73,26 @@ public class PropFakerContext extends AbstractFakerContext {
     }
 
     /**
+     * get faker config long property base on property key.
+     *
+     * @param propertyKey   property key
+     * @return property long value
+     */
+    public long getLongProperty(final String propertyKey, final long defaultValue) {
+        String p = _props.getProperty(propertyKey);
+        if (p == null || "".equals(p)) {
+            return defaultValue;
+        }
+
+        try {
+            return Long.parseLong(p);
+        } catch (Exception e) {
+            System.err.println(String.format("illegal long property format [%s=%s].", propertyKey, p));
+            return defaultValue;
+        }
+    }
+
+    /**
      * get faker config boolean property base on property key.
      *
      * @param propertyKey   property key
