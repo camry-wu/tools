@@ -10,7 +10,7 @@
 
   <groupId>net.vitular.tools.faker4j</groupId>
   <artifactId>tools-faker4j</artifactId>
-  <version>0.2-SNAPSHOT</version>
+  <version>0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Vitular tools-faker4j</name>
