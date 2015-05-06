@@ -33,8 +33,9 @@ public interface FakerConsts {
      * global property key.
      */
     public static final String GLOBAL_PROP_KEY_DEBUG            = "global.debug";
-    public static final String GLOBAL_PROP_KEY_DATE_OFFSET      = "global.dateOffset";
-    public static final String GLOBAL_PROP_KEY_DATELESSTHENNOW  = "global.dateLessThenNow";
+    public static final String GLOBAL_PROP_KEY_DATE_BASE        = "global.date.base";
+    public static final String GLOBAL_PROP_KEY_DATE_OFFSET      = "global.date.offset";
+    public static final String GLOBAL_PROP_KEY_DATELESSTHENNOW  = "global.date.lessThenNow";
 
     /**
      * file property key.

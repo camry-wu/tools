@@ -56,6 +56,11 @@ public class DateFieldFaker extends AbstractFieldFaker {
     public static final String NOW = "NOW";
 
     /**
+     * initial date by base time.
+     */
+    public static final String BASE = "BASE";
+
+    /**
      * date format mode.
      */
     private int _iFormatMode;
@@ -155,6 +160,14 @@ public class DateFieldFaker extends AbstractFieldFaker {
                     _value = new Date(ltmp);
                 } else if (initialValue.equalsIgnoreCase(NOW)) {        // NOW
                     _value = new Date();
+                } else if (initialValue.equalsIgnoreCase(BASE)) {       // intial by global.date.base
+                    String base = _fakerContext.getProperty(FakerConsts.GLOBAL_PROP_KEY_DATE_BASE);
+                    SimpleDateFormat sdf = new SimpleDateFormat(INITIAL_VALUE_FORMAT);
+                    try {
+                        _value = sdf.parse(base);
+                    } catch (ParseException e) {
+                        _value = getDateBefore1Day();
+                    }
                 } else {                                                // others, not defined
                     _value = getDateBefore1Day();
                 }

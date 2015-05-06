@@ -180,9 +180,10 @@ public final class Main {
 
         IFakerContext fakerContext = fileFaker.getFakerContext();
 
-        long period = fakerContext.getLongProperty("global.repeat.execute.period", 60000);
-        int repeatTimes = fakerContext.getIntProperty("global.repeat.execute.times", 7200);
+        long period = fakerContext.getLongProperty("global.repeat.execute.period", 60);
+        int repeatTimes = fakerContext.getIntProperty("global.repeat.execute.times", 1);
         int factor = fakerContext.getIntProperty("global.repeat.growth.factor", 1);
+        int glowthMode = fakerContext.getIntProperty("global.repeat.growth.mode", 1);
         int growthTimes = fakerContext.getIntProperty("global.repeat.growth.times", 0);
 
         do {
@@ -195,7 +196,7 @@ public final class Main {
             }
 
             if (growthTimes > 0) {
-                grow(fileFaker, factor);
+                grow(fileFaker, factor, glowthMode);
             }
             growthTimes--;
         } while (growthTimes >= 0);
@@ -212,10 +213,17 @@ public final class Main {
      * @param fileFaker the file faker
      * @param factor    the growth factor
      */
-    private static void grow(final IFileFaker fileFaker, final int factor) {
+    private static void grow(final IFileFaker fileFaker, final int factor, final int growMode) {
         int recordTypeCount = fileFaker.getRecordTypeCount();
         for (int i = 0; i < recordTypeCount; i++) {
-            int rowSize = fileFaker.getRowSize(i) * factor;
+            int rowSize = fileFaker.getRowSize(i);
+
+            if (growMode == 1) {
+                rowSize = rowSize * factor;
+            } else if (growMode == 2) {
+                rowSize = rowSize + rowSize / factor;
+            }
+
             fileFaker.setRowSize(i, rowSize);
         }
     }
