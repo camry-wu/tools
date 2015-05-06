@@ -52,6 +52,16 @@ public abstract class AbstractFileFaker implements IFileFaker {
     private int _aiRowSize[];
 
     /**
+     * one step row size.
+     */
+    private int _aiOneStepRowSize[][];
+
+    /**
+     * loop count
+     */
+    private int _iLoopCount = 0;
+
+    /**
      * total row size.
      */
     private int _iTotalRowSize = 0;
@@ -81,6 +91,25 @@ public abstract class AbstractFileFaker implements IFileFaker {
         _iTotalRowSize = 0;
         for (int i = 0; i < _iRecordTypeCount; i++) {
             _iTotalRowSize += _aiRowSize[i];
+
+            if (_iLoopCount == 0) {
+                _iLoopCount = _aiRowSize[i];
+            } else {
+                _iLoopCount = Math.min(_iLoopCount, _aiRowSize[i]);
+            }
+        }
+
+        // reset one step row size
+        int[] count = new int[_iRecordTypeCount];
+        for (int i = 0; i < _iRecordTypeCount; i++) {
+            int low = _aiRowSize[i] / _iLoopCount;
+            int high = low + 1;
+            int highStepCount = _aiRowSize[i] % _iLoopCount;
+            int lowStepCount = _iLoopCount - highStepCount;
+
+            _aiOneStepRowSize[i][0] = lowStepCount;
+            _aiOneStepRowSize[i][1] = low;
+            _aiOneStepRowSize[i][2] = high;
         }
     }
 
@@ -116,6 +145,7 @@ public abstract class AbstractFileFaker implements IFileFaker {
             }
 
         }
+        _aiOneStepRowSize = new int[_iRecordTypeCount][3];
 
         resetTotalRowSize();
 
@@ -133,38 +163,37 @@ public abstract class AbstractFileFaker implements IFileFaker {
             percent = 1;
         }
 
-        int outputCount[] = new int[_iRecordTypeCount];
-        System.arraycopy(_aiRowSize, 0, outputCount, 0, _iRecordTypeCount);
+        int currentNo = 0;
+        int tenth = 0;
+        for (int i = 0; i < _iLoopCount; i++) {
 
-        int currentType = 0;
+            // write row for each record type
+            for (int currentType = 0; currentType < _iRecordTypeCount; currentType++) {
 
-        int i = 0;
-        int j = 0;
-        while (i < _iTotalRowSize) {
+                int loop = _aiOneStepRowSize[currentType][1];
+                if (i >= _aiOneStepRowSize[currentType][0]) {
+                    loop = _aiOneStepRowSize[currentType][2];
+                }
 
-            if (outputCount[currentType] <= 0) {
-                currentType = (currentType + 1) % _iRecordTypeCount;
-                continue;
-            }
+                for (int k = 0; k < loop; k++) {
+                    Object row = _rowFaker.next(currentType);
 
-            Object row = _rowFaker.next(currentType);
+                    if (!_fakerContext.isDebug()) {
+                        writeRow(row);
+                    }
 
-            if (((int) (i + 1) % percent) == 0) {
-                j++;
-                if (j % 10 == 0) {
-                    print(j / 10);
-                } else {
-                    print("=");
+                    currentNo++;
+                    if ((currentNo % percent) == 0) {
+                        tenth++;
+                        if (tenth % 10 == 0) {
+                            print(tenth / 10);
+                        } else {
+                            print("=");
+                        }
+                    }
+
                 }
             }
-
-            if (!_fakerContext.isDebug()) {
-                writeRow(row);
-            }
-
-            outputCount[currentType] = outputCount[currentType] - 1;
-            currentType = (currentType + 1) % _iRecordTypeCount;
-            i++;
         }
 
         if (!_bQuiet) {
@@ -175,7 +204,7 @@ public abstract class AbstractFileFaker implements IFileFaker {
     /**
      * generate file in the indicated period time.
      *
-     * @param period    unit is milliseconds
+     * @param period    unit is second
      */
     public void generateFile(final long period) {
         if (_fakerContext.isDebug()) {

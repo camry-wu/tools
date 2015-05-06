@@ -228,22 +228,6 @@ public final class Main {
         }
     }
 
-    static class ExeTask extends TimerTask {
-        private IFileFaker fileFaker;
-
-        ExeTask(final IFileFaker fileFaker) {
-            this.fileFaker = fileFaker;
-        }
-
-        public void run() {
-            try {
-                fileFaker.generateFile();
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * execute once.
      *
