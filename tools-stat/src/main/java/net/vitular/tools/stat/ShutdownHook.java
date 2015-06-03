@@ -21,6 +21,10 @@ public class ShutdownHook extends Thread {
 
     private Releaseable[] _releaseObj;
 
+    /**
+     * constructor.
+     * @param releaseObj the objects which should be released
+     */
     public ShutdownHook(final Releaseable ... releaseObj) {
         _releaseObj = releaseObj;
     }
@@ -31,14 +35,7 @@ public class ShutdownHook extends Thread {
             relobj.release();
         }
 
-        System.out.println("release resources.");
-    }
-
-    /**
-     * default constructor.
-     */
-    public ShutdownHook() {
-        super();
+        System.out.println("\nrelease resources.");
     }
 } // END: ShutdownHook
 ///:~
