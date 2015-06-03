@@ -12,6 +12,7 @@ package net.vitular.tools.stat;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.StringWriter;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -36,7 +37,41 @@ public class FileUtils {
         super();
     }
 
-    public static List<String> grepFile(final Pattern pattern, String filename) {
+    /**
+     * read all content from file to one string.
+     *
+     * @param filename file name
+     * @return file content
+     */
+    public static String file2string(final String filename) throws IOException {
+        StringWriter sw = new StringWriter();
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new FileReader(filename));
+
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                sw.write(line);
+                sw.write('\n');
+            }
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+        }
+
+        return sw.toString();
+    }
+
+    /**
+     * grep file.
+     *
+     * @param pattern   grep pattern
+     * @param filename  file name
+     * @return
+     */
+    public static List<String> grepFile(final Pattern pattern, final String filename) throws IOException {
         List<String> ret = new ArrayList<String> ();
 
         BufferedReader br = null;
@@ -51,8 +86,10 @@ public class FileUtils {
                     ret.add(matcher.group(0));
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } finally {
+            if (br != null) {
+                br.close();
+            }
         }
 
         return ret;

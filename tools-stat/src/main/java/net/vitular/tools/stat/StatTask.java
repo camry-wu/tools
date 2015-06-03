@@ -68,6 +68,15 @@ public abstract class StatTask extends TimerTask implements Releaseable {
     }
 
     /**
+     * print header.
+     *
+     * @param header
+     */
+    protected void printHeader(final String header) {
+        print(header);
+    }
+
+    /**
      * run task and print statistic data.
      */
     public void run() {

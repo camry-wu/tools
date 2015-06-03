@@ -12,6 +12,8 @@ public class App {
         sb.append("method   options:\n");
         sb.append("-------------------------------------\n");
         sb.append("cpustat  [interval] [output file path]\n");
+        sb.append("pstat    <pid> [interval] [output file path]\n");
+        sb.append("tstat    <pid> <tid> [interval] [output file path]\n");
 
         System.out.println(sb.toString());
     }
@@ -22,12 +24,18 @@ public class App {
             System.exit(1);
         }
 
-        if (args[0].equals("cpustat")) {
-            String[] remainArg = new String[args.length - 1];
-            System.arraycopy(args, 1, remainArg, 0, args.length - 1);
+        String[] remainArg = new String[args.length - 1];
+        System.arraycopy(args, 1, remainArg, 0, args.length - 1);
 
+        if (args[0].equals("cpustat")) {
             CPUStat stat = new CPUStat();
-            stat.execute(remainArg);
+            stat.statCPU(remainArg);
+        } else if (args[0].equals("pstat")) {
+            CPUStat stat = new CPUStat();
+            stat.statProcess(remainArg);
+        } else if (args[0].equals("tstat")) {
+            CPUStat stat = new CPUStat();
+            stat.statThread(remainArg);
         } else {
             usage();
             System.exit(1);
