@@ -26,11 +26,15 @@ import java.util.regex.Pattern;
  */
 public class CPUStat {
 
+    // proc file name
+    public static final String CPU_INFO_FILE = "/proc/cpuinfo";
     public static final String CPU_STAT_FILE = "/proc/stat";
     public static final String PROCESS_STAT_FILE_PARTTERN = "/proc/%d/stat";
     public static final String THREAD_STAT_FILE_PARTTERN = "/proc/%d/task/%d/stat";
 
-    public static final Pattern CPU_JIFFIES_PATTERN = Pattern.compile("^cpu\\s.*");
+    // grep patterns
+    public static final Pattern CPU_JIFFIES_PATTERN = Pattern.compile("^cpu\\s+(.*)");
+    public static final Pattern CPU_NUM_PATTERN = Pattern.compile("^processor\\s+:\\s+(\\d+)");
 
     /**
      * default constructor.
@@ -45,6 +49,29 @@ public class CPUStat {
 
     private static String getThreadStatFile(final long pid, final long tid) {
         return String.format(THREAD_STAT_FILE_PARTTERN, pid, tid);
+    }
+
+    /**
+     * read /proc/cpuinfo to get cpu numbers.
+     *
+     * @return cpu number
+     */
+    public static int numCpus() {
+        List<String> cpuline_list = null;
+
+        try {
+            cpuline_list = FileUtils.grepFile(CPU_NUM_PATTERN, CPU_INFO_FILE);
+        } catch (IOException ioe) {
+            System.err.println("cannot find stat file: " + CPU_STAT_FILE);
+            System.exit(1);
+            return 0;
+        }
+
+        if (cpuline_list != null) {
+            return cpuline_list.size();
+        }
+
+        return 0;
     }
 
     /**
@@ -226,6 +253,7 @@ public class CPUStat {
         private CPUUsage _lastCPU = null;
         private ProcessUsage _lastProcess = null;
         private long _lPid;
+        private int _iCpuNum;
 
         /**
          * constructor.
@@ -238,6 +266,8 @@ public class CPUStat {
             _lastCPU = currentCPUUsage();
             _lastProcess = currentProcessUsage(pid);
             _lPid = pid;
+            _iCpuNum = numCpus();
+
             printHeader("*PROCESS*, *CPU*");
         }
 
@@ -255,7 +285,7 @@ public class CPUStat {
             long totalCPU = currentCPU.total() - _lastCPU.total();
 
             double cpuPercent = currentCPU.usagePercent(_lastCPU);
-            double processPercent = currentProcess.usagePercent(_lastProcess, totalCPU);
+            double processPercent = currentProcess.usagePercent(_lastProcess, totalCPU) * _iCpuNum;
 
             _lastCPU = currentCPU;
             _lastProcess = currentProcess;
@@ -268,6 +298,7 @@ public class CPUStat {
         private CPUUsage _lastCPU = null;
         private ProcessUsage _lastProcess = null;
         private ThreadUsage _lastThread = null;
+        private int _iCpuNum;
 
         private long _lPid;
         private long _lTid;
@@ -284,6 +315,7 @@ public class CPUStat {
             _lastCPU = currentCPUUsage();
             _lastProcess = currentProcessUsage(pid);
             _lastThread = currentThreadUsage(pid, tid);
+            _iCpuNum = numCpus();
 
             _lPid = pid;
             _lTid = tid;
@@ -305,8 +337,8 @@ public class CPUStat {
             long totalCPU = currentCPU.total() - _lastCPU.total();
 
             double cpuPercent = currentCPU.usagePercent(_lastCPU);
-            double processPercent = currentProcess.usagePercent(_lastProcess, totalCPU);
-            double threadPercent = currentThread.usagePercent(_lastThread, totalCPU);
+            double processPercent = currentProcess.usagePercent(_lastProcess, totalCPU) * _iCpuNum;
+            double threadPercent = currentThread.usagePercent(_lastThread, totalCPU) * _iCpuNum;
 
             _lastCPU = currentCPU;
             _lastProcess = currentProcess;
@@ -339,7 +371,7 @@ class CPUUsage {
         assert(cpuline != null);
 
         Scanner scan = new Scanner(cpuline);
-        if (scan.hasNext()) scan.next();
+        //if (scan.hasNext()) scan.next();
         if (scan.hasNext()) _lUser = scan.nextLong();
         if (scan.hasNext()) _lNice = scan.nextLong();
         if (scan.hasNext()) _lSystem = scan.nextLong();

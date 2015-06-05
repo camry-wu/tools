@@ -83,7 +83,7 @@ public class FileUtils {
             while ((line = br.readLine()) != null) {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
-                    ret.add(matcher.group(0));
+                    ret.add(matcher.group(1));
                 }
             }
         } finally {
