@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+	   http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+	   http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
+       http://www.springframework.org/schema/aop 
+       http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	
+	<!-- WEB
+    <bean id="gettextMethod" class="net.javalib.ftl.methods._Method"/>
+
+    <bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="templateLoaderPath"><value>WEB-INF/views/</value></property>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="_"><ref local="gettextMethod"/></entry>
+            </map>
+        </property>
+    </bean> -->
+	
+	<!-- -->
+	<bean id="themeChangeInterceptor" class="org.springframework.web.servlet.theme.ThemeChangeInterceptor"/>
+
+	<!-- mvc -->
+	<mvc:annotation-driven />
+
+	<!-- annotation scan classpath -->
+	<!-- auto include <context:annotation-config/> -->
+	<context:component-scan base-package="net.vitular.tools.cooking.controller"/>
+
+	<!-- HandlerMapping -->
+    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="interceptors">
+		  <list>
+			<!--<ref local="themeChangeInterceptor"/>-->
+		  </list>
+		</property>
+    </bean>
+
+	<!-- HandlerAdapter -->
+    <bean id="handlerAdapter" class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+
+	<!-- resolver -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="maxUploadSize" value="10485760"/>
+        <property name="maxInMemorySize" value="40960"/>
+	</bean>
+
+	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+	</bean>
+
+    <!--
+        Chain view resolvers, first resolve reports and then fallback to the ftl resolver
+        Note that this cannot be reversed as the ftl resolver will throw an exception on failure
+    <bean id="jasperViewResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver">
+        <property name="order"><value>0</value></property>
+        <property name="basename"><value>reports</value></property>
+        <property name="defaultParentView"><value>oaReportBase</value></property>
+    </bean>
+    -->
+
+<!--
+    <bean id="ftlViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="suffix"><value>.ftl</value></property>
+        <property name="exposeSpringMacroHelpers"><value>true</value></property>
+    </bean>
+-->
+
+    <!--
+      - This bean resolves specific types of exception to corresponding error views.
+        - The default behaviour of DispatcherServlet is to propagate all exceptions to the
+        - servlet container: This will happen here with all other types of exception.
+	<bean id="exceptionResolver" class="com.kylietech.oaj.web.mvc.ControllerMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="org.springframework.orm.hibernate.HibernateOptimisticLockingFailureException">StaleObjectException</prop>
+                <prop key="org.springframework.dao.DataAccessException">exception.dataaccess</prop>
+                <prop key="org.springframework.jdbc.UncategorizedSQLException">exception.sql</prop>
+                <prop key="java.text.ParseException">exception.parse</prop>
+                <prop key="java.sql.SQLException">exception.sql</prop>
+                <prop key="java.lang.IllegalArgumentException">exception.illegalargument</prop>
+                <prop key="java.lang.Exception">exception.uncaught</prop>
+            </props>
+        </property>
+    </bean>
+        -->
+	
+	<!-- THEMES
+	<bean id="themeResolver" class="org.springframework.web.servlet.theme.SessionThemeResolver"/> -->
+		
+	<!-- OAJ CONTEXT
+	<bean id="oajContext" class="com.kylietech.oaj.context.OAJContext"/> -->
+
+	<!-- controller
+	<bean name="/login.html" class="net.vitular.tools.cooking.controller.LoginController"/> -->
+</beans>
