@@ -1,7 +1,7 @@
 /*
  * -----------------------------------------------------------
  * file name  : DBUserDetailsService.java
- * creator    : wuhao(wuhao@fortinet.com)
+ * creator    : camry(camry_camry@sina.com)
  * created    : Fri 12 Jun 2015 12:17:59 PM CST
  *
  * modifications:
@@ -13,6 +13,9 @@ package net.vitular.tools.cooking.auth;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +33,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  *          $Date$
  */
 public class DBUserDetailsService implements UserDetailsService {
+
+    /**
+     * logger.
+     */
+    protected Log _logger = LogFactory.getLog(getClass());
 
     /**
      * default constructor.
@@ -52,11 +60,16 @@ public class DBUserDetailsService implements UserDetailsService {
 
         authlist.add(new SimpleGrantedAuthority("ROLE_USER"));
 
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("call loadUserByUsername()...");
+        }
+
         if ("camry".equals(username)) {
             authlist.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
-        user = new User(username, "", true, true, true, true, authlist);
+        user = new User(username, "202cb962ac59075b964b07152d234b70", true, true, true, true, authlist);
+        //user = new User(username, "123", true, true, true, true, authlist);
 
         return user;
     }

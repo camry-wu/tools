@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : LoginController.java
+ * file name  : IndexController.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Thu 11 Jun 2015 01:53:08 PM CST
  *
@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import net.vitular.tools.cooking.auth.LoginUser;
-
 /**
- * login controller.
+ * index controller.
  *
  * RequestMapping:
  *  use for class: indicated the parent path, like /main
@@ -50,74 +48,25 @@ import net.vitular.tools.cooking.auth.LoginUser;
  *          $Date$
  */
 @Controller
-@RequestMapping("/service/auth")
-public class LoginController extends BaseController {
+public class IndexController extends BaseController {
 
     /**
-     * handle login request.
-     *
-     * @param user      login user name
-     * @param password  user password
-     * @return ModelAndView
-     */
-    @RequestMapping(value="/login.html", method={RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView login(@RequestParam(value="error", required=false) boolean error) {
-        // 1. validate request parameter
-        // 2. invoke model to handle command
-        // 3. select the next viewer
-
-        ModelAndView mv = new ModelAndView();
-
-        // add model data
-        if (error) {
-            mv.addObject("message", "login failure!");
-        } else {
-            mv.addObject("message", "login success!");
-        }
-
-        mv.addObject("loginUser", new LoginUser("danny", "123"));
-
-        // set logic viewer name
-        mv.setViewName("login");
-
-        return mv;
-    }
-
-    /**
-     * handle logout request.
+     * handle index request.
      *
      * @return ModelAndView
      */
-    @RequestMapping(value="/logout.html")
-    public ModelAndView logout() {
-        ModelAndView mv = new ModelAndView();
-
-        // add model data
-        mv.addObject("message", "logout success!");
-
-        // set logic viewer name
-        mv.setViewName("login");
-
-        return mv;
-    }
-
-    /**
-     * handle denied request.
-     *
-     * @return ModelAndView
-     */
-    @RequestMapping(value="/denied.html", method={RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value={"/", "/index.html"}, method={RequestMethod.GET})
     public ModelAndView denied() {
 
         ModelAndView mv = new ModelAndView();
 
         // add model data
-        mv.addObject("message", "You has no authentication!");
+        mv.addObject("message", "This is the index page!");
 
         // set logic viewer name
-        mv.setViewName("denied");
+        mv.setViewName("index");
 
         return mv;
     }
-} // END: LoginController
+} // END: IndexController
 ///:~

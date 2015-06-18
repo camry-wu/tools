@@ -35,6 +35,12 @@
 
 	<!-- mvc -->
 	<mvc:annotation-driven />
+	<!--
+	<mvc:default-servlet-handler/>
+	<mvc:resources mapping="/img/**" location="/img/"/> 
+	<mvc:resources mapping="/js/**" location="/js/"/> 
+	<mvc:resources mapping="/css/**" location="/css/"/> 
+	 -->
 
 	<!-- annotation scan classpath -->
 	<!-- auto include <context:annotation-config/> -->
@@ -42,11 +48,11 @@
 
 	<!-- HandlerMapping -->
     <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-		<property name="interceptors">
+		<!--<property name="interceptors">
 		  <list>
-			<!--<ref local="themeChangeInterceptor"/>-->
+			<ref local="themeChangeInterceptor"/>
 		  </list>
-		</property>
+		</property>-->
     </bean>
 
 	<!-- HandlerAdapter -->

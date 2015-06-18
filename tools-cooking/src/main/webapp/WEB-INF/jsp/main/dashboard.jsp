@@ -39,8 +39,6 @@
 <h3>${message}</h3>
 <h4>*<sec:authentication property="name"/>*<h4>
 
-<a href ="/Cooking/auth/logout">logout</a><br/>
-
-<a href ="/Cooking/index.jsp">index</a>
+<a href ="${pageContext.request.contextPath}/index.html">index</a>
 </body>
 </html>
