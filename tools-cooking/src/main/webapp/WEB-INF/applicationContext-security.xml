@@ -18,7 +18,6 @@
 
 	<security:http pattern="/" security="none"></security:http>
 	<security:http pattern="/index.jsp" security="none"></security:http>
-	<security:http pattern="/index.html" security="none"></security:http>
 
 	<!-- verify code -->
 	<security:http pattern="/getCode" security="none" />
@@ -38,7 +37,8 @@
 		<security:access-denied-handler ref="accessDeniedHandler"/>
 
 		<!-- test -->
-		<security:intercept-url pattern="/test/**" access="permitAll"></security:http>
+		<security:intercept-url pattern="/index.html" access="permitAll"/>
+		<security:intercept-url pattern="/test/**" access="permitAll"/>
 		<security:intercept-url pattern="/service/auth/login.html" access="anonymous"/>
 
 		<security:intercept-url pattern="/main/admin.html" access="hasRole('ADMIN')"/>

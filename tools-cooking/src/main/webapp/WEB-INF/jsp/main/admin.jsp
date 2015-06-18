@@ -30,7 +30,6 @@
 <body>
 <h2>Admin</h2>
 <h3>${message}</h3>
-<h4>*<sec:authentication property="name"/>*<h4>
 
 <a href ="${pageContext.request.contextPath}/index.html">index</a>
 </body>
