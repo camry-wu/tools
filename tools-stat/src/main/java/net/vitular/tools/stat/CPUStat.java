@@ -10,6 +10,8 @@
  */
 package net.vitular.tools.stat;
 
+import java.math.BigDecimal;
+
 import java.io.IOException;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class CPUStat {
     // grep patterns
     public static final Pattern CPU_JIFFIES_PATTERN = Pattern.compile("^cpu\\s+(.*)");
     public static final Pattern CPU_NUM_PATTERN = Pattern.compile("^processor\\s+:\\s+(\\d+)");
+    public static final Pattern CPU_FREQ_PATTERN = Pattern.compile("^model name[^@]*@\\s+([0-9.A-Za-z]*)");
 
     /**
      * default constructor.
@@ -69,6 +72,48 @@ public class CPUStat {
 
         if (cpuline_list != null) {
             return cpuline_list.size();
+        }
+
+        return 0;
+    }
+
+    private static long getMultipiler(char cpuMultiplier) {
+        switch (cpuMultiplier) {
+            case 'K':
+                return 1000L;
+            case 'M':
+                return 1000000L;
+            default:
+            case 'G':
+                return 1000000000L;
+        }
+    }
+
+    /**
+     * read /proc/cpuinfo to get cpu frequency in hz.
+     *
+     * @return cpu frequency in hz
+     */
+    public static long cpuFrequencyInHz() {
+        List<String> cpuline_list = null;
+
+        try {
+            cpuline_list = FileUtils.grepFile(CPU_FREQ_PATTERN, CPU_INFO_FILE);
+        } catch (IOException ioe) {
+            System.err.println("cannot find stat file: " + CPU_STAT_FILE);
+            System.exit(1);
+            return 0;
+        }
+
+        if (cpuline_list != null && !cpuline_list.isEmpty()) {
+            String freqstr = cpuline_list.get(0);
+
+            int len = freqstr.length();
+
+            BigDecimal freq = new BigDecimal(freqstr.substring(0, len - 3));
+            long multiplier = getMultipiler(freqstr.charAt(len - 3));
+
+            return freq.multiply(new BigDecimal(Long.toString(multiplier))).longValue();
         }
 
         return 0;

@@ -95,7 +95,9 @@ public abstract class AbstractFileFaker implements IFileFaker {
             if (_iLoopCount == 0) {
                 _iLoopCount = _aiRowSize[i];
             } else {
-                _iLoopCount = Math.min(_iLoopCount, _aiRowSize[i]);
+                if (_aiRowSize[i] > 0) {
+                    _iLoopCount = Math.min(_iLoopCount, _aiRowSize[i]);
+                }
             }
         }
 

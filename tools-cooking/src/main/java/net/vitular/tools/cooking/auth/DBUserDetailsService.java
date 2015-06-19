@@ -18,17 +18,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import org.apache.shiro.authc.UnknownAccountException;
 
 /**
  * DB user details service.
  *
- * @author wuhao
+ * @author camry
  * @version $Revision$
  *          $Date$
  */
@@ -51,27 +47,10 @@ public class DBUserDetailsService implements UserDetailsService {
      *
      * @param username
      * @return
-     * @throws UsernameNotFoundException
+     * @throws UnknownAccountException
      */
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = null;
-
-        List<GrantedAuthority> authlist = new ArrayList<GrantedAuthority> ();
-
-        authlist.add(new SimpleGrantedAuthority("ROLE_USER"));
-
-        if (_logger.isDebugEnabled()) {
-            _logger.debug("call loadUserByUsername()...");
-        }
-
-        if ("camry".equals(username)) {
-            authlist.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-
-        user = new User(username, "202cb962ac59075b964b07152d234b70", true, true, true, true, authlist);
-        //user = new User(username, "123", true, true, true, true, authlist);
-
-        return user;
+    public LoginUser loadUserByUsername(String username) throws UnknownAccountException {
+        return new LoginUser(username, "");
     }
 } // END: DBUserDetailsService
 ///:~
