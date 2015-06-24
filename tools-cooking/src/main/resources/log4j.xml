@@ -73,6 +73,11 @@
 		<appender-ref ref="FILE_CONTROLLER"/>
 	</category>
 
+	<category name="net.vitular.tools.cooking.auth" additivity="false">
+		<priority value="DEBUG"/>
+		<appender-ref ref="FILE_CONTROLLER"/>
+	</category>
+
 	<root>
 		<priority value="DEBUG"/>
 		<appender-ref ref="FILE_PUBLIC"/>

@@ -13,6 +13,9 @@ package net.vitular.tools.cooking.auth;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -33,6 +36,11 @@ import org.apache.shiro.util.ByteSource;
  *          $Date$
  */
 public class UserRealm extends AuthorizingRealm {
+
+    /**
+     * logger.
+     */
+    protected Log _logger = LogFactory.getLog(getClass());
 
     /**
      * user details service.
@@ -57,10 +65,16 @@ public class UserRealm extends AuthorizingRealm {
      * @return the AuthorizationInfo associated with this principals.
      */
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("call doGetAuthorizationInfo..");
+        }
         String username = (String) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
         Set<String> roles = new HashSet<String> ();
+        if ("camry".equals(username)) {
+            roles.add("admin");
+        }
         info.setRoles(roles);                               // userService.findRoles(username);
 
         Set<String> permissions = new HashSet<String> ();
@@ -92,6 +106,10 @@ public class UserRealm extends AuthorizingRealm {
             user.getPassword(),
             ByteSource.Util.bytes(user.getCredentialsSalt()),   // salt = username + salt
             getName());
+
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("call doGetAuthenticationInfo.. salt=" + user.getCredentialsSalt());
+        }
 
         return info;
     }

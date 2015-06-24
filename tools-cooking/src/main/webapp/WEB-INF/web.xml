@@ -75,9 +75,6 @@
 	
 	<!--
 		-Add "web-based" Spring bean scope support.
-		<url-pattern>/service/</url-pattern>
-		<url-pattern>/main</url-pattern>
-		<url-pattern>/index</url-pattern>
 	-->
 	<listener>
 		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>

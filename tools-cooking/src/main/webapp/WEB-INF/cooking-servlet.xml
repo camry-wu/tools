@@ -92,20 +92,31 @@
       - This bean resolves specific types of exception to corresponding error views.
         - The default behaviour of DispatcherServlet is to propagate all exceptions to the
         - servlet container: This will happen here with all other types of exception.
-	<bean id="exceptionResolver" class="com.kylietech.oaj.web.mvc.ControllerMappingExceptionResolver">
+	-->
+	<bean id="exceptionResolver" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
         <property name="exceptionMappings">
             <props>
-                <prop key="org.springframework.orm.hibernate.HibernateOptimisticLockingFailureException">StaleObjectException</prop>
-                <prop key="org.springframework.dao.DataAccessException">exception.dataaccess</prop>
-                <prop key="org.springframework.jdbc.UncategorizedSQLException">exception.sql</prop>
-                <prop key="java.text.ParseException">exception.parse</prop>
-                <prop key="java.sql.SQLException">exception.sql</prop>
-                <prop key="java.lang.IllegalArgumentException">exception.illegalargument</prop>
-                <prop key="java.lang.Exception">exception.uncaught</prop>
+                <prop key="org.springframework.orm.hibernate.HibernateOptimisticLockingFailureException">error/optimisticLocking</prop>
+                <prop key="org.springframework.dao.DataAccessException">error/dataaccess</prop>
+                <prop key="org.springframework.jdbc.UncategorizedSQLException">error/sql</prop>
+                <prop key="java.sql.SQLException">error/sql</prop>
+                <prop key="java.text.ParseException">error/parse</prop>
+                <prop key="java.lang.IllegalArgumentException">error/illegalargument</prop>
+                <prop key="org.apache.shiro.authz.UnauthorizedException">error/unauthorized</prop>
+                <prop key="java.lang.Exception">error/uncaught</prop>
+                <prop key="java.lang.Throwable">error/uncaught</prop>
             </props>
         </property>
+        <property name="statusCodes">
+            <props>
+                <prop key="errors/uncaught">500</prop>
+                <prop key="errors/404">404</prop>
+            </props>
+        </property>
+        <property name="warnLogCategory" value="WARN"/>
+        <property name="defaultErrorView" value="error/uncaught"/>
+        <property name="defaultStatusCode" value="500"/>
     </bean>
-        -->
 	
 	<!-- THEMES
 	<bean id="themeResolver" class="org.springframework.web.servlet.theme.SessionThemeResolver"/> -->

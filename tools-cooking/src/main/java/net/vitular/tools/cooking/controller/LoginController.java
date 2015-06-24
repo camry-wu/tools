@@ -18,6 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.validation.annotation.Validated;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 
 import net.vitular.tools.cooking.auth.LoginUser;
 
@@ -50,8 +57,31 @@ import net.vitular.tools.cooking.auth.LoginUser;
  *          $Date$
  */
 @Controller
-@RequestMapping("/service/auth")
+@RequestMapping("/auth")
 public class LoginController extends BaseController {
+
+    /**
+     * show login page.
+     *
+     * @return ModelAndView
+     */
+    @RequestMapping(value="/login.html", method={RequestMethod.GET})
+    public ModelAndView loginPage() {
+        // 1. validate request parameter
+        // 2. invoke model to handle command
+        // 3. select the next viewer
+
+        ModelAndView mv = new ModelAndView();
+
+        // add model data
+
+        mv.addObject("loginUser", new LoginUser("danny", "123"));
+
+        // set logic viewer name
+        mv.setViewName("login");
+
+        return mv;
+    }
 
     /**
      * handle login request.
@@ -60,26 +90,48 @@ public class LoginController extends BaseController {
      * @param password  user password
      * @return ModelAndView
      */
-    @RequestMapping(value="/login.html", method={RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView login(@RequestParam(value="error", required=false) boolean error) {
-        // 1. validate request parameter
-        // 2. invoke model to handle command
-        // 3. select the next viewer
+    @RequestMapping(value="/login.html", method={RequestMethod.POST})
+    public ModelAndView login(
+        @Validated(value=LoginUser.class) LoginUser user,
+        RedirectAttributes redirectAttributes) {
+
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
 
         ModelAndView mv = new ModelAndView();
 
-        // add model data
-        if (error) {
+        try {
+            subject.login(token);
+        } catch (AuthenticationException e) {
             mv.addObject("message", "login failure!");
-        } else {
-            mv.addObject("message", "login success!");
         }
 
-        mv.addObject("loginUser", new LoginUser("danny", "123"));
+        if (subject.isAuthenticated()) {
+            mv.setViewName("main/dashboard");
 
-        // set logic viewer name
-        mv.setViewName("login");
+            //redirectAttributes.addFlashAttribute("", "");
+            //redirectAttributes.addFlashAttribute("", "");
+            //mv.setViewName("redirect:/main/dashboard.html");
+            //
+            //mv.setViewName("forward:/main/dashboard.html");
+        } else {
+            mv.setViewName("login");
+        }
 
+        return mv;
+    }
+
+    /**
+     * handle unauthorized request.
+     *
+     * @param user      login user name
+     * @param password  user password
+     * @return ModelAndView
+     */
+    @RequestMapping(value="/unauthorized.html", method={RequestMethod.GET, RequestMethod.POST})
+    public ModelAndView unauthorized() {
+        ModelAndView mv = new ModelAndView();
+        mv.setViewName("unauthorized");
         return mv;
     }
 

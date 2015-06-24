@@ -1,13 +1,15 @@
 
 2015-06-18: success: spring security login and logout
 2015-06-18: success: spring security csrf
-2015-06-18: try: spring security verify code
-: try: spring security password salt
-: try: spring security http/https
-: try: spring security cache
-: try: spring security role define
+# 2015-06-18: try: spring security verify code
+# : try: spring security password salt
+# : try: spring security http/https
+# : try: spring security cache
+# : try: spring security role define
 
-try: shiro login and logout and csrf
+2015-06-18: try: shiro login and logout and csrf
+2015-06-23: try: spring exception mvc
+2015-06-23: success: shiro login
 try: shiro password salt
 try: shiro verify code
 try: shiro cache
@@ -15,3 +17,4 @@ try: shiro acl
 try: shiro session
 try: shiro encrypt
 try: shiro remember me
+try: shiro aop

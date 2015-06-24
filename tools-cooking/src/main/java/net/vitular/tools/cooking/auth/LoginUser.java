@@ -90,7 +90,8 @@ class PasswordHelper {
     private final static RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
 
     public static void encryptPassword(final LoginUser user) {
-        user.setSalt(randomNumberGenerator.nextBytes().toHex());
+        //user.setSalt(randomNumberGenerator.nextBytes().toHex());
+        user.setSalt("123");
 
         String newPassword = new SimpleHash(
             algorithmName,

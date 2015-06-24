@@ -76,8 +76,8 @@
 				<plugin>
 					<groupId>org.mortbay.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
-					<!--<version>6.1.26</version>-->
-					<version>8.1.16.v20140903</version>
+					<version>6.1.26</version>
+					<!--<version>8.1.16.v20140903</version>-->	<!-- maybe need 1.7 jdk -->
 
 					<executions>
 						<execution>
@@ -296,7 +296,7 @@
 				<artifactId>spring-test</artifactId>
 				<version>${org.springframework.version}</version>
 			</dependency>
-
+<!--
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-core</artifactId>
@@ -322,6 +322,7 @@
 				<version>${org.springframework.security.version}</version>
 				<scope>runtime</scope>
 			</dependency>
+-->
 		</dependencies>
 	</dependencyManagement>
 
@@ -331,6 +332,11 @@
 			<name>Oracle Released Java Packages</name>
 			<url>http://download.oracle.com/maven</url>
 			<layout>default</layout>
+		</repository>
+
+		<repository>
+			<id>maven repo</id>
+			<url>http://repo1.maven.org/maven2</url>
 		</repository>
 	</repositories>
 </project>

@@ -14,6 +14,9 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
@@ -28,6 +31,11 @@ import org.apache.shiro.cache.ehcache.EhCacheManager;
  *          $Date$
  */
 public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher {
+
+    /**
+     * logger.
+     */
+    protected Log _logger = LogFactory.getLog(getClass());
 
     private EhCacheManager  _cacheManager;
 
@@ -48,6 +56,10 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
      * @return true if the provided token credentials hash match to the stored account credentials hash, false otherwise
      */
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("call doCredentialsMatch..");
+        }
+
         String username = (String) token.getPrincipal();
         /*
         // retry count + 1

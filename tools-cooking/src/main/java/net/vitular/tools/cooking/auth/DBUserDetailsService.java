@@ -50,7 +50,12 @@ public class DBUserDetailsService implements UserDetailsService {
      * @throws UnknownAccountException
      */
     public LoginUser loadUserByUsername(String username) throws UnknownAccountException {
-        return new LoginUser(username, "");
+        LoginUser user = new LoginUser(username, "123");
+        user.setSalt("123");
+        PasswordHelper.encryptPassword(user);
+        System.out.println("pwd:" + user.getPassword());
+
+        return user;
     }
 } // END: DBUserDetailsService
 ///:~

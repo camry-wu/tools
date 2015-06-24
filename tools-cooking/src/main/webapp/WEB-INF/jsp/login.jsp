@@ -11,13 +11,14 @@
 <h2>Hello Cooking!</h2>
 
 <br/>
-<h3>${message}</h3>
+<h3>Login</h3>
+<h4>${message}</h4>
 <%
 	//org.springframework.security.authentication.encoding.Md5PasswordEncoder enc = new org.springframework.security.authentication.encoding.Md5PasswordEncoder();
 	//System.out.println(enc.encodePassword("123", null));
 %>
 
-<c:url var="loginUrl" value="/login"/>
+<c:url var="loginUrl" value="/auth/login.html"/>
 <form:form action="${loginUrl}" method="POST" commandName="loginUser">
 	Username: <form:input path="username"/><br/>
 	Password: <form:input path="password"/><br/>
