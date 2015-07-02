@@ -55,7 +55,7 @@ public class IndexController extends BaseController {
      *
      * @return ModelAndView
      */
-    @RequestMapping(value={"/", "/index.html"}, method={RequestMethod.GET})
+    @RequestMapping(value={"/", "/index"}, method={RequestMethod.GET})
     public ModelAndView denied() {
 
         ModelAndView mv = new ModelAndView();

@@ -42,6 +42,6 @@
 <h3>Welcome ${username}.${password}: ${message}</h3>
 <h4><sec:authentication property="name"/><h4>
 
-<a href ="${pageContext.request.contextPath}/index.html">index</a>
+<a href ="${pageContext.request.contextPath}/index">index</a>
 </body>
 </html>

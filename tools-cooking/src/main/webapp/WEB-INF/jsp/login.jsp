@@ -18,7 +18,7 @@
 	//System.out.println(enc.encodePassword("123", null));
 %>
 
-<c:url var="loginUrl" value="/auth/login.html"/>
+<c:url var="loginUrl" value="/auth/login"/>
 <form:form action="${loginUrl}" method="POST" commandName="loginUser">
 	Username: <form:input path="username"/><br/>
 	Password: <form:input path="password"/><br/>

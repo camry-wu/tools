@@ -30,6 +30,6 @@
 <h2>Admin</h2>
 <h3>${message}</h3>
 
-<a href ="${pageContext.request.contextPath}/index.html">index</a>
+<a href ="${pageContext.request.contextPath}/index">index</a>
 </body>
 </html>

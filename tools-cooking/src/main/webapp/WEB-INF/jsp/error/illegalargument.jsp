@@ -28,6 +28,6 @@
 <h3><%= ex.getMessage(); %></h3>
 <% ex.printStackTrace(new java.io.PrintWriter(out)); %>
 <br/>
-<a href ="${pageContext.request.contextPath}/index.html">index</a>
+<a href ="${pageContext.request.contextPath}/index">index</a>
 </body>
 </html>

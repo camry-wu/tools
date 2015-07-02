@@ -13,14 +13,12 @@
 <br/>
 <h3>${message}</h3>
 
-<a href ="${pageContext.request.contextPath}/auth/login.html">login</a><br/>
-<a href ="${pageContext.request.contextPath}/main/dashboard.html">dashboard</a><br/>
-<a href ="${pageContext.request.contextPath}/main/admin.html">admin</a><br/>
+<a href ="${pageContext.request.contextPath}/auth/login">login</a><br/>
+<a href ="${pageContext.request.contextPath}/main/dashboard">dashboard</a><br/>
+<a href ="${pageContext.request.contextPath}/main/admin">admin</a><br/>
 
 <br/>
-<form:form action="${pageContext.request.contextPath}/auth/logout.html" method="post">
-<input type="submit" value="Logout"/>
-</form:form>
+<a href ="${pageContext.request.contextPath}/auth/logout">logout</a><br/>
 
 </body>
 </html>

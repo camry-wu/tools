@@ -120,10 +120,5 @@
 	
 	<!-- THEMES
 	<bean id="themeResolver" class="org.springframework.web.servlet.theme.SessionThemeResolver"/> -->
-		
-	<!-- OAJ CONTEXT
-	<bean id="oajContext" class="com.kylietech.oaj.context.OAJContext"/> -->
 
-	<!-- controller
-	<bean name="/login.html" class="net.vitular.tools.cooking.controller.LoginController"/> -->
 </beans>

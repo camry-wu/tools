@@ -37,12 +37,12 @@
 		<security:access-denied-handler ref="accessDeniedHandler"/>
 
 		<!-- test -->
-		<security:intercept-url pattern="/index.html" access="permitAll"/>
+		<security:intercept-url pattern="/index" access="permitAll"/>
 		<security:intercept-url pattern="/test/**" access="permitAll"/>
-		<security:intercept-url pattern="/service/auth/login.html" access="anonymous"/>
+		<security:intercept-url pattern="/service/auth/login" access="anonymous"/>
 
-		<security:intercept-url pattern="/main/admin.html" access="hasRole('ADMIN')"/>
-		<security:intercept-url pattern="/main/dashboard.html" access="hasRole('USER')"/>
+		<security:intercept-url pattern="/main/admin" access="hasRole('ADMIN')"/>
+		<security:intercept-url pattern="/main/dashboard" access="hasRole('USER')"/>
 		<security:intercept-url pattern="/**" access="hasRole('USER')"/>
 
 		<!-- Notice: must use POST /logout, and set csrf hidden parameter -->
@@ -53,9 +53,9 @@
 
 		<security:form-login
 			login-processing-url="/login"
-			login-page="/service/auth/login.html"
-			authentication-failure-url="/service/auth/login.html?error=true"
-			default-target-url="/main/dashboard.html"/>
+			login-page="/service/auth/login"
+			authentication-failure-url="/service/auth/login?error=true"
+			default-target-url="/main/dashboard"/>
 
 		<security:csrf/>
 
@@ -92,7 +92,7 @@
 	</bean>
 
 	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-		<property name="errorPage" value="/service/auth/denied.html"/>
+		<property name="errorPage" value="/service/auth/denied"/>
 	</bean>
 
 	<!--

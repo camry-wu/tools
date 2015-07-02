@@ -29,10 +29,10 @@
 <h3>${message}</h3>
 <h4>*<sec:authentication property="name"/>*<h4>
 
-<a href ="${pageContext.request.contextPath}/index.html">index</a>
+<a href ="${pageContext.request.contextPath}/index">index</a>
 <br/>
 <br/>
-<form:form action="${pageContext.request.contextPath}/auth/logout.html" method="post">
+<form:form action="${pageContext.request.contextPath}/auth/logout" method="post">
 <input type="submit" value="Logout"/>
 </form:form>
 </body>

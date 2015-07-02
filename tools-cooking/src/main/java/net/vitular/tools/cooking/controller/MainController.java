@@ -42,7 +42,7 @@ public class MainController extends BaseController {
      *
      * @return ModelAndView
      */
-    @RequestMapping(value="/dashboard.html")
+    @RequestMapping(value="/dashboard")
     public ModelAndView dashboard() {
         ModelAndView mv = new ModelAndView();
 
@@ -60,7 +60,7 @@ public class MainController extends BaseController {
      *
      * @return ModelAndView
      */
-    @RequestMapping(value="/admin.html")
+    @RequestMapping(value="/admin")
     public ModelAndView admin() {
         ModelAndView mv = new ModelAndView();
 

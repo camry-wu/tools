@@ -65,7 +65,7 @@ public class LoginController extends BaseController {
      *
      * @return ModelAndView
      */
-    @RequestMapping(value="/login.html", method={RequestMethod.GET})
+    @RequestMapping(value="/login", method={RequestMethod.GET})
     public ModelAndView loginPage() {
         // 1. validate request parameter
         // 2. invoke model to handle command
@@ -90,7 +90,7 @@ public class LoginController extends BaseController {
      * @param password  user password
      * @return ModelAndView
      */
-    @RequestMapping(value="/login.html", method={RequestMethod.POST})
+    @RequestMapping(value="/login", method={RequestMethod.POST})
     public ModelAndView login(
         @Validated(value=LoginUser.class) LoginUser user,
         RedirectAttributes redirectAttributes) {
@@ -111,9 +111,9 @@ public class LoginController extends BaseController {
 
             //redirectAttributes.addFlashAttribute("", "");
             //redirectAttributes.addFlashAttribute("", "");
-            //mv.setViewName("redirect:/main/dashboard.html");
+            //mv.setViewName("redirect:/main/dashboard");
             //
-            //mv.setViewName("forward:/main/dashboard.html");
+            //mv.setViewName("forward:/main/dashboard");
         } else {
             mv.setViewName("login");
         }
@@ -128,7 +128,7 @@ public class LoginController extends BaseController {
      * @param password  user password
      * @return ModelAndView
      */
-    @RequestMapping(value="/unauthorized.html", method={RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/unauthorized", method={RequestMethod.GET, RequestMethod.POST})
     public ModelAndView unauthorized() {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("unauthorized");
@@ -139,26 +139,29 @@ public class LoginController extends BaseController {
      * handle logout request.
      *
      * @return ModelAndView
-     */
-    @RequestMapping(value="/logout.html")
+    @RequestMapping(value="/logout", method={RequestMethod.GET, RequestMethod.POST})
     public ModelAndView logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+
         ModelAndView mv = new ModelAndView();
 
         // add model data
         mv.addObject("message", "logout success!");
 
         // set logic viewer name
-        mv.setViewName("login");
+        mv.setViewName("redirect:/auth/login");
 
         return mv;
     }
+     */
 
     /**
      * handle denied request.
      *
      * @return ModelAndView
      */
-    @RequestMapping(value="/denied.html", method={RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/denied", method={RequestMethod.GET, RequestMethod.POST})
     public ModelAndView denied() {
 
         ModelAndView mv = new ModelAndView();
