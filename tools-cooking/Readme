@@ -9,14 +9,12 @@
 
 2015-06-18: try: shiro login and logout and csrf
 2015-06-23: try: spring exception mvc
-2015-06-23: success: shiro login
+2015-06-23: success: shiro login, shiro password salt
 2015-07-02: success: shiro logout
-2015-07-02: try: spring csrf
-try: shiro password salt
-try: shiro verify code
+2015-07-02: try: shiro verify code
 try: shiro cache
-try: shiro acl
 try: shiro session
 try: shiro encrypt
 try: shiro remember me
+try: shiro acl
 try: shiro aop
