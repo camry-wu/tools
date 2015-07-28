@@ -80,7 +80,7 @@ import javax.persistence.Id;
 // import javax.persistence.MapKeyJoinColumn;
 // import javax.persistence.MapKeyJoinColumns;
 // import javax.persistence.MapKeyTemporal;
-// import javax.persistence.MappedSuperclass;
+import javax.persistence.MappedSuperclass;
 // import javax.persistence.MapsId;
 // import javax.persistence.NamedAttributeNode;
 // import javax.persistence.NamedEntityGraph;
@@ -141,7 +141,7 @@ import javax.persistence.TableGenerator;
 // import javax.persistence.Temporal;
 // import javax.persistence.TemporalType;
 // import javax.persistence.TransactionRequiredException;
-// import javax.persistence.Transient;
+import javax.persistence.Transient;
 // import javax.persistence.Tuple;
 // import javax.persistence.TupleElement;
 // import javax.persistence.TypedQuery;
@@ -156,6 +156,7 @@ import javax.persistence.Version;
  * @version $Revision$
  *          $Date$
  */
+@MappedSuperclass
 public abstract class BaseObj {
 
     /**
@@ -180,6 +181,7 @@ public abstract class BaseObj {
 
     // getter and setter
     public abstract void setOid(final long oid);
+    @Transient
     public abstract long getOid();
 
     public void setVersion(final int version) { _iVersion = version; }

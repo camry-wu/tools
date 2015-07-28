@@ -98,7 +98,10 @@ public class UserTest {
         System.out.println("------ query user --------");
         System.out.println(u2);
 
-        u2.setUsername("camry");
+        u2.setUsername("wuhao");
+        u2.setLastUpdate(new Date());
+        u2.setLastUpdater("danny");
+        u2.setIsActive(true);
         session.save(u2);
 
         System.out.println("------ update user --------");

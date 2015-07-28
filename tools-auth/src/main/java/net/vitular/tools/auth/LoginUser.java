@@ -163,6 +163,7 @@ import net.vitular.tools.common.domain.BaseObj;
  */
 @Entity
 @Table(name="cooking.user")
+@AttributeOverride(name="oid", column=@Column(name="oid"))
 public class LoginUser extends BaseObj implements java.io.Serializable {
 
     /**
