@@ -8,7 +8,7 @@
  *
  * -----------------------------------------------------------
  */
-package net.vitular.tools.cooking.auth;
+package net.vitular.tools.auth;
 
 import java.util.HashSet;
 import java.util.Set;

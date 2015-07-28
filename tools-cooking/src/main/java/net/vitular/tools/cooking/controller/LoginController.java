@@ -26,7 +26,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
-import net.vitular.tools.cooking.auth.LoginUser;
+import net.vitular.tools.auth.LoginUser;
 
 /**
  * login controller.

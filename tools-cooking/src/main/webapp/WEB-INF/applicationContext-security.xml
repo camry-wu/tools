@@ -23,17 +23,17 @@
 	</bean>
 
 	<!-- credentials matcher -->
-	<bean id="credentialsMatcher" class="net.vitular.tools.cooking.auth.RetryLimitHashedCredentialsMatcher">
+	<bean id="credentialsMatcher" class="net.vitular.tools.auth.RetryLimitHashedCredentialsMatcher">
 		<constructor-arg ref="cacheManager"/>
 		<property name="hashAlgorithmName" value="md5"/>
 		<property name="hashIterations" value="2"/>
 		<property name="storedCredentialsHexEncoded" value="true"/>
 	</bean>
 
-	<bean id="userDetailsService" class="net.vitular.tools.cooking.auth.DBUserDetailsService"/>
+	<bean id="userDetailsService" class="net.vitular.tools.auth.DBUserDetailsService"/>
 
 	<!-- realm -->
-	<bean id="userRealm" class="net.vitular.tools.cooking.auth.UserRealm">
+	<bean id="userRealm" class="net.vitular.tools.auth.UserRealm">
 		<property name="userDetailsService" ref="userDetailsService"/>
 		<property name="credentialsMatcher" ref="credentialsMatcher"/>
 		<property name="cachingEnabled" value="true"/>
@@ -113,7 +113,7 @@
 	</bean>
 
 	<!-- self defined filter chain
-	<bean id = "filterChainDefinitionMap" class="net.vitular.tools.cooking.auth.FilterChainDefinitionMap">
+	<bean id = "filterChainDefinitionMap" class="net.vitular.tools.auth.FilterChainDefinitionMap">
 		<property name="">
 			<value>
 				/index.jsp = anon
