@@ -134,45 +134,5 @@ public class LoginController extends BaseController {
         mv.setViewName("unauthorized");
         return mv;
     }
-
-    /**
-     * handle logout request.
-     *
-     * @return ModelAndView
-    @RequestMapping(value="/logout", method={RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView logout() {
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
-
-        ModelAndView mv = new ModelAndView();
-
-        // add model data
-        mv.addObject("message", "logout success!");
-
-        // set logic viewer name
-        mv.setViewName("redirect:/auth/login");
-
-        return mv;
-    }
-     */
-
-    /**
-     * handle denied request.
-     *
-     * @return ModelAndView
-     */
-    @RequestMapping(value="/denied", method={RequestMethod.GET, RequestMethod.POST})
-    public ModelAndView denied() {
-
-        ModelAndView mv = new ModelAndView();
-
-        // add model data
-        mv.addObject("message", "You has no authentication!");
-
-        // set logic viewer name
-        mv.setViewName("denied");
-
-        return mv;
-    }
 } // END: LoginController
 ///:~

@@ -60,6 +60,8 @@
 				<value>WEB-INF/lib/fortiframe.jar</value>  
 			</list>
 		</property>
+		cacheableMappingLocations
+		cacheRegionFactory
 		-->
 		<property name="hibernateProperties">
 			<props>

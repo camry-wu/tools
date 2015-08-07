@@ -52,7 +52,9 @@ public class MainController extends BaseController {
         // set logic viewer name
         mv.setViewName("main/dashboard");
 
-        return mv;
+        throw new RuntimeException("lala");
+
+        //return mv;
     }
 
     /**

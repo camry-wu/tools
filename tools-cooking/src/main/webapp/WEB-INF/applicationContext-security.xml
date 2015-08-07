@@ -148,6 +148,8 @@
 		<property name="filterChainDefinitions">
 			<value>
 				/ = anon
+				/404.jsp = anon
+				/500.jsp = anon
 				/index.jsp = anon
 				/index = anon
 				/auth/unauthorized = anon
