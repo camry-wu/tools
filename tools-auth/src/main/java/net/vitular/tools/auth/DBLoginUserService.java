@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : DBUserDetailsService.java
+ * file name  : DBLoginUserService.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Fri 12 Jun 2015 12:17:59 PM CST
  *
@@ -28,7 +28,7 @@ import org.apache.shiro.authc.UnknownAccountException;
  * @version $Revision$
  *          $Date$
  */
-public class DBUserDetailsService implements UserDetailsService {
+public class DBLoginUserService implements ILoginUserService {
 
     /**
      * logger.
@@ -36,9 +36,17 @@ public class DBUserDetailsService implements UserDetailsService {
     protected Log _logger = LogFactory.getLog(getClass());
 
     /**
+     * login user dao.
+     */
+    private ILoginUserDao _loginUserDao;
+
+    public void setLoginUserDao(final ILoginUserDao loginUserDao) { _loginUserDao = loginUserDao; }
+    public ILoginUserDao getLoginUserDao() { return _loginUserDao; }
+
+    /**
      * default constructor.
      */
-    public DBUserDetailsService() {
+    public DBLoginUserService() {
         super();
     }
 
@@ -50,12 +58,24 @@ public class DBUserDetailsService implements UserDetailsService {
      * @throws UnknownAccountException
      */
     public LoginUser loadUserByUsername(String username) throws UnknownAccountException {
-        LoginUser user = new LoginUser(username, "123");
+        LoginUser user = _loginUserDao.loadUserByUsername(username);
+        /*
         user.setSalt("123");
         PasswordHelper.encryptPassword(user);
         System.out.println("pwd:" + user.getPassword());
+        */
 
         return user;
     }
-} // END: DBUserDetailsService
+
+    /**
+     * save user to db.
+     *
+     * @param user LoginUser
+     * @return user oid
+     */
+    public Long saveUser(final LoginUser user) {
+        return _loginUserDao.saveUser(user);
+    }
+} // END: DBLoginUserService
 ///:~

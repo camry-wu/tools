@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : UserDetailsService.java
+ * file name  : ILoginUserService.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Fri 19 Jun 2015 04:22:06 PM CST
  *
@@ -19,7 +19,7 @@ import org.apache.shiro.authc.UnknownAccountException;
  * @version $Revision$
  *          $Date$
  */
-public interface UserDetailsService {
+public interface ILoginUserService {
 
     /**
      * load user by username.
@@ -29,5 +29,13 @@ public interface UserDetailsService {
      * @throws UnknownAccountException
      */
     public LoginUser loadUserByUsername(final String username) throws UnknownAccountException;
-} // END: UserDetailsService
+
+    /**
+     * save user to db.
+     *
+     * @param user LoginUser
+     * @return user oid
+     */
+    public Long saveUser(final LoginUser user);
+} // END: ILoginUserService
 ///:~

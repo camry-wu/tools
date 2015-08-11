@@ -192,6 +192,7 @@ public abstract class BaseObj {
     public Date getLastUpdate() { return _lastUpdate; }
 
     public void setLastUpdater(final String lastUpdater) { _sLastUpdater = lastUpdater; }
+    @Column(name="LastUpdater", length=255)
     public String getLastUpdater() { return _sLastUpdater; }
 
     public void setIsActive(final boolean isActive) { _bIsActive = isActive; }

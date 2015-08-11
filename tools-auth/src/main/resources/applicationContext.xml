@@ -29,7 +29,9 @@
 			</list>
 		</property>
 	</bean>
-	
+
+	<!-- ========================= DB CONFIGURATION ======================== -->
+
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${jdbc.driver}" />
 		<property name="url" value="${jdbc.url}" />
@@ -40,19 +42,19 @@
 		<property name="maxIdle" value="${jdbc.maxIdle}" />
 		<property name="minIdle" value="${jdbc.minIdle}" />
 		<property name="maxWait" value="${jdbc.maxWait}" />
-		<!--
 		<property name="validationQuery" value="SELECT 1" />
 		<property name="testWhileIdle" value="true" />
 		<property name="timeBetweenEvictionRunsMillis" value="3600000" />
 		<property name="minEvictableIdleTimeMillis" value="18000000" />
 		<property name="testOnBorrow" value="true" />
-		-->
 	</bean>
 
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="packagesToScan">
-			<value>net.vitular.tools.auth</value>
+			<list>
+				<value>net.vitular.tools.auth</value>
+			</list>
 		</property>
 		<!--
 		<property name="mappingJarLocations">  
@@ -65,20 +67,31 @@
 		-->
 		<property name="hibernateProperties">
 			<props>
+				<!--
+				<prop key="hibernate.hbm2ddl.auto"></prop>
+				 -->
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
 				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
 			</props>
 		</property>
 	</bean>
-	
+
 	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 
-	<!-- ========================= ASPECT CONFIGURATION ======================== -->
-	
 	<tx:annotation-driven transaction-manager="transactionManager"/>
 
 	<aop:aspectj-autoproxy />
+
+	<!-- ========================= Dao and Service ======================== -->
+
+	<bean id="loginUserDao" class="net.vitular.tools.auth.LoginUserDao">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+
+	<bean id="DBLoginUserService" class="net.vitular.tools.auth.DBLoginUserService">
+		<property name="loginUserDao" ref="loginUserDao"></property>
+	</bean>
 </beans>

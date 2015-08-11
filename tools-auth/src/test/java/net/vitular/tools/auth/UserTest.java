@@ -69,10 +69,8 @@ public class UserTest {
      */
     @Test
     public void testAddUser() throws Exception {
-        SessionFactory sesfac = (SessionFactory) _context.getBean("sessionFactory");
+        ILoginUserService userService = (ILoginUserService) _context.getBean("DBLoginUserService");
 
-        Session session = sesfac.openSession();
-        session.beginTransaction();
 /*
         LoginUser u1 = new LoginUser();
         u1.setUsername("danny");
@@ -93,24 +91,20 @@ public class UserTest {
         session.save(u1);
 */
 
-        LoginUser u2 = (LoginUser) session.get(LoginUser.class, 3L);
+        LoginUser u2 = (LoginUser) userService.loadUserByUsername("wuhao");
 
         System.out.println("------ query user --------");
         System.out.println(u2);
 
         u2.setUsername("wuhao");
         u2.setLastUpdate(new Date());
-        u2.setLastUpdater("danny");
+        u2.setLastUpdater("qingf");
         u2.setIsActive(true);
-        session.save(u2);
+        userService.saveUser(u2);
 
-        System.out.println("------ update user --------");
-        System.out.println(u2);
-
-        session.getTransaction().commit();
-        session.close();
-
-        sesfac.close();
+        System.out.println("------ updated user --------");
+        LoginUser u3 = (LoginUser) userService.loadUserByUsername("wuhao");
+        System.out.println(u3);
     }
 } // END: UserTest
 ///:~

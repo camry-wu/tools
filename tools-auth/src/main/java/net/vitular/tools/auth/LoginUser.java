@@ -10,10 +10,7 @@
  */
 package net.vitular.tools.auth;
 
-import org.apache.shiro.crypto.hash.SimpleHash;
-import org.apache.shiro.crypto.RandomNumberGenerator;
-import org.apache.shiro.crypto.SecureRandomNumberGenerator;
-import org.apache.shiro.util.ByteSource;
+import java.io.Serializable;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
@@ -164,7 +161,7 @@ import net.vitular.tools.common.domain.BaseObj;
 @Entity
 @Table(name="cooking.user")
 @AttributeOverride(name="oid", column=@Column(name="oid"))
-public class LoginUser extends BaseObj implements java.io.Serializable {
+public class LoginUser extends BaseObj implements Serializable {
 
     /**
      * object id.
@@ -217,21 +214,26 @@ public class LoginUser extends BaseObj implements java.io.Serializable {
     public long getOid() { return _lOid; }
 
     public void setUsername(final String username) { _sUsername = username; }
+    @Column(name="Username", length=255)
     public String getUsername() { return _sUsername; }
 
     public void setPassword(final String password) { _sPassword = password; }
+    @Column(name="Password", length=255)
     public String getPassword() { return _sPassword; }
 
     public void setSalt(final String salt) { _sSalt = salt; }
+    @Column(name="Salt", length=255)
     public String getSalt() { return _sSalt; }
 
     public void setLocked(final Boolean locked) { _bLocked = locked; }
     public Boolean getLocked() { return _bLocked; }
 
     public void setVerifyEmail(final String verifyEmail) { _sVerifyEmail = verifyEmail; }
+    @Column(name="VerifyEmail", length=255)
     public String getVerifyEmail() { return _sVerifyEmail; }
 
     public void setVerifyCellPhoneNo(final String verifyCellPhoneNo) { _sVerifyCellPhoneNo = verifyCellPhoneNo; }
+    @Column(name="VerifyCellPhoneNo", length=255)
     public String getVerifyCellPhoneNo() { return _sVerifyCellPhoneNo; }
 
     /**
@@ -278,29 +280,4 @@ public class LoginUser extends BaseObj implements java.io.Serializable {
         return sb.toString();
     }
 } // END: LoginUser
-
-/**
- * password helper.
- *
- * @author camry
- * @version
- */
-class PasswordHelper {
-    private final static String algorithmName = "md5";
-    private final static int hashIterations = 2;
-    private final static RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
-
-    public static void encryptPassword(final LoginUser user) {
-        //user.setSalt(randomNumberGenerator.nextBytes().toHex());
-        user.setSalt("123");
-
-        String newPassword = new SimpleHash(
-            algorithmName,
-            user.getPassword(),
-            ByteSource.Util.bytes(user.getCredentialsSalt()),
-            hashIterations).toHex();
-
-        user.setPassword(newPassword);
-    }
-}
 ///:~
