@@ -17,7 +17,9 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.dao.DataAccessException;
+//import org.springframework.dao.DataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import org.apache.shiro.authc.UnknownAccountException;
 
@@ -38,10 +40,9 @@ public class DBLoginUserService implements ILoginUserService {
     /**
      * login user dao.
      */
+    @Autowired(required=true)
+    @Qualifier("loginUserDao")
     private ILoginUserDao _loginUserDao;
-
-    public void setLoginUserDao(final ILoginUserDao loginUserDao) { _loginUserDao = loginUserDao; }
-    public ILoginUserDao getLoginUserDao() { return _loginUserDao; }
 
     /**
      * default constructor.

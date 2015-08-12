@@ -9,11 +9,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.orm.hibernate4.HibernateCallback;
+import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
 
 /**
  * Hibernate Dao
+ * @author DL
  */
 public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     protected Log logger = LogFactory.getLog(getClass());
@@ -111,13 +112,12 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     {
         return (List) getHibernateTemplate().execute(new HibernateCallback()
         {
-            public Object doInHibernate(Session session) throws HibernateException
-            {
+            public Object doInHibernate(Session session) throws HibernateException {
                 Query query = session.createSQLQuery(sSQL);
 
                 addParameters(query, aobjPar);
 
-                if( nLimit > 0 )
+                if (nLimit > 0)
                     query.setMaxResults(nLimit);
 
                 return query.list();
@@ -187,14 +187,12 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
         return (SearchResult) getHibernateTemplate().execute(
                 new HibernateCallback()
                 {
-                    public Object doInHibernate(Session session) throws HibernateException
-                    {
+                    public Object doInHibernate(Session session) throws HibernateException {
                         Query query = session.createQuery(sQuery);
 
                         addParameters(query, aobjPar);
 
-                        if( iCurrentPage > 0 && iRowsPerPage > 0 )
-                        {
+                        if (iCurrentPage > 0 && iRowsPerPage > 0) {
                             query.setFirstResult((iCurrentPage - 1) * iRowsPerPage);
                             query.setMaxResults(iRowsPerPage);
                         }
@@ -202,7 +200,7 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
                         List listRecord = query.list();
 
                         long iTotal;
-                        if( bCountAll )
+                        if (bCountAll)
                             iTotal = countAll(sQuery, aobjPar);
                         else
                             iTotal = makeFooTotal(listRecord.size(), iCurrentPage, iRowsPerPage);
@@ -260,10 +258,8 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     @Override
     public void execute(final String sQuery)
     {
-        getHibernateTemplate().execute(new HibernateCallback()
-        {
-            public Object doInHibernate(Session session) throws HibernateException
-            {
+        getHibernateTemplate().execute(new HibernateCallback() {
+            public Object doInHibernate(Session session) throws HibernateException {
                 return session.createQuery(sQuery).executeUpdate();
             }
         });
@@ -280,8 +276,7 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     {
         getHibernateTemplate().execute(new HibernateCallback()
         {
-            public Object doInHibernate(Session session) throws HibernateException
-            {
+            public Object doInHibernate(Session session) throws HibernateException {
                 Query query = session.createQuery(sQuery);
 
                 addParameters(query, aobjPar);
@@ -303,11 +298,9 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     {
         getHibernateTemplate().execute(new HibernateCallback()
         {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException
-            {
+            public Object doInHibernate(Session session) throws HibernateException {
                 Query queryObject = session.createQuery(sHql);
-                if( aobjArg != null )
-                {
+                if (aobjArg != null) {
                     queryObject.setParameter(sParName, aobjArg);
                 }
                 queryObject.executeUpdate();
@@ -353,8 +346,7 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     {
         getHibernateTemplate().execute(new HibernateCallback()
         {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException
-            {
+            public Object doInHibernate(Session session) throws HibernateException {
                 Query queryObject = session.createQuery(sDeleteHql);
                 queryObject.executeUpdate();
                 return null;
@@ -372,13 +364,10 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
     {
         getHibernateTemplate().execute(new HibernateCallback()
         {
-            public Object doInHibernate(Session session) throws HibernateException, SQLException
-            {
+            public Object doInHibernate(Session session) throws HibernateException {
                 Query queryObject = session.createQuery(sDeleteHql);
-                if( aobjArg != null )
-                {
-                    for( int i = 0; i < aobjArg.length; i++ )
-                    {
+                if (aobjArg != null) {
+                    for (int i = 0; i < aobjArg.length; i++) {
                         queryObject.setParameter(i, aobjArg[i]);
                     }
                 }

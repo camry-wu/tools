@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Dao Support.
+ * @author DL
  */
 public interface IDaoSupport
 {

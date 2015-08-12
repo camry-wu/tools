@@ -30,11 +30,11 @@
 		<property name="storedCredentialsHexEncoded" value="true"/>
 	</bean>
 
-	<bean id="userDetailsService" class="net.vitular.tools.auth.DBUserDetailsService"/>
+	<bean id="loginUserService" class="net.vitular.tools.auth.DBLoginUserService"/>
 
 	<!-- realm -->
 	<bean id="userRealm" class="net.vitular.tools.auth.UserRealm">
-		<property name="userDetailsService" ref="userDetailsService"/>
+		<property name="loginUserService" ref="loginUserService"/>
 		<property name="credentialsMatcher" ref="credentialsMatcher"/>
 		<property name="cachingEnabled" value="true"/>
 		<property name="authenticationCachingEnabled" value="true"/>

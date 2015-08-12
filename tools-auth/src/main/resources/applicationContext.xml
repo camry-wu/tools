@@ -15,6 +15,9 @@
        http://www.springframework.org/schema/aop 
        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
+	<!-- Autowired -->
+	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
 	<!-- context
 	<context:annotation-config />
 	<context:component-scan base-package="net.vitular.tools.auth"/> -->
@@ -64,15 +67,19 @@
 		</property>
 		cacheableMappingLocations
 		cacheRegionFactory
+		<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
 		-->
 		<property name="hibernateProperties">
 			<props>
 				<!--
-				<prop key="hibernate.hbm2ddl.auto"></prop>
+				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
+				<prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop>
 				 -->
 				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
 				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
 				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+				<prop key="current_session_context_class">thread</prop>
+				<!--<prop key="current_session_context_class">jta</prop>-->
 			</props>
 		</property>
 	</bean>
@@ -85,6 +92,23 @@
 
 	<aop:aspectj-autoproxy />
 
+	<!--
+		<bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+		<tx:advice id="txAdvice" transaction-manager="transactionManager">
+			<tx:attributes>
+				<tx:method name="add*" propagation="REQUIRED"/>
+				<tx:method name="get*" propagation="REQUIRED"/>
+				<tx:method name="*" read-only="true"/>
+			</tx:attributes>
+		</tx:advice>
+
+		<aop:config expose-proxy="true>
+			<aop:pointcut id="txPointcut" expression="execution(* com.demo.service..*.*(..))"/>
+			<aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
+		</aop:config>
+	 -->
+
 	<!-- ========================= Dao and Service ======================== -->
 
 	<bean id="loginUserDao" class="net.vitular.tools.auth.LoginUserDao">
@@ -92,6 +116,5 @@
 	</bean>
 
 	<bean id="DBLoginUserService" class="net.vitular.tools.auth.DBLoginUserService">
-		<property name="loginUserDao" ref="loginUserDao"></property>
 	</bean>
 </beans>
