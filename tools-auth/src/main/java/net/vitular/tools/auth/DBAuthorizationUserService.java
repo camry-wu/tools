@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : DBLoginUserService.java
+ * file name  : DBAuthorizationUserService.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Fri 12 Jun 2015 12:17:59 PM CST
  *
@@ -30,7 +30,7 @@ import org.apache.shiro.authc.UnknownAccountException;
  * @version $Revision$
  *          $Date$
  */
-public class DBLoginUserService implements ILoginUserService {
+public class DBAuthorizationUserService implements IAuthorizationUserService {
 
     /**
      * logger.
@@ -38,16 +38,16 @@ public class DBLoginUserService implements ILoginUserService {
     protected Log _logger = LogFactory.getLog(getClass());
 
     /**
-     * login user dao.
+     * authorization user dao.
      */
     @Autowired(required=true)
-    @Qualifier("loginUserDao")
-    private ILoginUserDao _loginUserDao;
+    @Qualifier("authorizationUserDao")
+    private IAuthorizationUserDao _authorizationUserDao;
 
     /**
      * default constructor.
      */
-    public DBLoginUserService() {
+    public DBAuthorizationUserService() {
         super();
     }
 
@@ -58,8 +58,8 @@ public class DBLoginUserService implements ILoginUserService {
      * @return
      * @throws UnknownAccountException
      */
-    public LoginUser loadUserByUsername(String username) throws UnknownAccountException {
-        LoginUser user = _loginUserDao.loadUserByUsername(username);
+    public AuthorizationUser loadUserByUsername(String username) throws UnknownAccountException {
+        AuthorizationUser user = _authorizationUserDao.loadUserByUsername(username);
         /*
         user.setSalt("123");
         PasswordHelper.encryptPassword(user);
@@ -72,11 +72,11 @@ public class DBLoginUserService implements ILoginUserService {
     /**
      * save user to db.
      *
-     * @param user LoginUser
+     * @param user AuthorizationUser
      * @return user oid
      */
-    public Long saveUser(final LoginUser user) {
-        return _loginUserDao.saveUser(user);
+    public Long saveUser(final AuthorizationUser user) {
+        return _authorizationUserDao.saveUser(user);
     }
-} // END: DBLoginUserService
+} // END: DBAuthorizationUserService
 ///:~

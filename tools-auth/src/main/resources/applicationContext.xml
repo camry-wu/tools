@@ -111,10 +111,10 @@
 
 	<!-- ========================= Dao and Service ======================== -->
 
-	<bean id="loginUserDao" class="net.vitular.tools.auth.LoginUserDao">
+	<bean id="authorizationUserDao" class="net.vitular.tools.auth.AuthorizationUserDao">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 
-	<bean id="DBLoginUserService" class="net.vitular.tools.auth.DBLoginUserService">
+	<bean id="DBAuthorizationUserService" class="net.vitular.tools.auth.DBAuthorizationUserService">
 	</bean>
 </beans>

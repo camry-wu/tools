@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : ILoginUserService.java
+ * file name  : IAuthorizationUserService.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Fri 19 Jun 2015 04:22:06 PM CST
  *
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  *      noRollbackFor
  *      noRollbackForClassName
  */
-public interface ILoginUserService {
+public interface IAuthorizationUserService {
 
     /**
      * load user by username.
@@ -43,15 +43,15 @@ public interface ILoginUserService {
      * @return
      * @throws UnknownAccountException
      */
-    public LoginUser loadUserByUsername(final String username) throws UnknownAccountException;
+    public AuthorizationUser loadUserByUsername(final String username) throws UnknownAccountException;
 
     /**
      * save user to db.
      *
-     * @param user LoginUser
+     * @param user AuthorizationUser
      * @return user oid
      */
     @Transactional(propagation=Propagation.REQUIRED)
-    public Long saveUser(final LoginUser user);
-} // END: ILoginUserService
+    public Long saveUser(final AuthorizationUser user);
+} // END: IAuthorizationUserService
 ///:~

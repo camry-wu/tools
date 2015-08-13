@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : LoginUser.java
+ * file name  : AuthorizationUser.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Wed 17 Jun 2015 04:59:37 PM CST
  *
@@ -152,7 +152,7 @@ import javax.persistence.Version;
 import net.vitular.tools.common.domain.BaseObj;
 
 /**
- * LoginUser domain.
+ * AuthorizationUser domain.
  *
  * @author camry
  * @version $Revision$
@@ -161,7 +161,7 @@ import net.vitular.tools.common.domain.BaseObj;
 @Entity
 @Table(name="cooking.user")
 @AttributeOverride(name="oid", column=@Column(name="oid"))
-public class LoginUser extends BaseObj implements Serializable {
+public class AuthorizationUser extends BaseObj implements Serializable {
 
     /**
      * object id.
@@ -245,7 +245,7 @@ public class LoginUser extends BaseObj implements Serializable {
     /**
      * default constructor.
      */
-    public LoginUser() {
+    public AuthorizationUser() {
         super();
     }
 
@@ -254,7 +254,7 @@ public class LoginUser extends BaseObj implements Serializable {
      * @param user  username
      * @param pass  password
      */
-    public LoginUser(final String user, final String pass) {
+    public AuthorizationUser(final String user, final String pass) {
         super();
         _sUsername = user;
         _sPassword = pass;
@@ -279,5 +279,5 @@ public class LoginUser extends BaseObj implements Serializable {
 
         return sb.toString();
     }
-} // END: LoginUser
+} // END: AuthorizationUser
 ///:~

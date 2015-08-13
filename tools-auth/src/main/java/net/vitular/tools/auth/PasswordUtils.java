@@ -49,10 +49,10 @@ public final class PasswordUtils {
     /**
      * encrypt user password.
      *
-     * @param user          Login User
+     * @param user          Authorization User
      * @param password      user's password
      */
-    public static void encryptPassword(final LoginUser user, final String password) {
+    public static void encryptPassword(final AuthorizationUser user, final String password) {
         user.setSalt(_randomNumberGenerator.nextBytes().toHex());
 
         String newPassword = new SimpleHash(

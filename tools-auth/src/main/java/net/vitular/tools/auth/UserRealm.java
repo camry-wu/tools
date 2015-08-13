@@ -45,11 +45,11 @@ public class UserRealm extends AuthorizingRealm {
     /**
      * user details service.
      */
-    private ILoginUserService _loginUserService;
+    private IAuthorizationUserService _authorizationUserService;
 
     // spring beans
-    public void setLoginUserService(final ILoginUserService userService) { _loginUserService = userService; }
-    public ILoginUserService getLoginUserService() { return _loginUserService; }
+    public void setAuthorizationUserService(final IAuthorizationUserService userService) { _authorizationUserService = userService; }
+    public IAuthorizationUserService getAuthorizationUserService() { return _authorizationUserService; }
 
     /**
      * default constructor.
@@ -93,7 +93,7 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String username = (String) token.getPrincipal();
 
-        LoginUser user = _loginUserService.loadUserByUsername(username);
+        AuthorizationUser user = _authorizationUserService.loadUserByUsername(username);
 
         if (Boolean.TRUE.equals(user.getLocked())) {
             throw new LockedAccountException(); // account locked

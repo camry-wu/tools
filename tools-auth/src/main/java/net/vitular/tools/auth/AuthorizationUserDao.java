@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : LoginUserDao.java
+ * file name  : AuthorizationUserDao.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Fri 12 Jun 2015 12:17:59 PM CST
  *
@@ -27,35 +27,35 @@ import static org.hibernate.criterion.Restrictions.or;
 import net.vitular.tools.common.dao.HibernateDao;
 
 /**
- * login user dao.
+ * authorization user dao.
  *
  * @author camry
  * @version $Revision$
  *          $Date$
  */
-public class LoginUserDao extends HibernateDao implements ILoginUserDao {
+public class AuthorizationUserDao extends HibernateDao implements IAuthorizationUserDao {
 
     /**
      * get user by oid.
      *
      * @param oid user oid
-     * @return LoginUser
-    public LoginUser getUserByOid(final Long oid) {
-        return (LoginUser) find(LoginUser.class, oid);
+     * @return AuthorizationUser
+    public AuthorizationUser getUserByOid(final Long oid) {
+        return (AuthorizationUser) find(AuthorizationUser.class, oid);
     }
      */
 	
     /**
      * save user to db.
      *
-     * @param user LoginUser
+     * @param user AuthorizationUser
      * @return user oid
      */
-    public Long saveUser(final LoginUser user) {
+    public Long saveUser(final AuthorizationUser user) {
         if (user.getOid() == 0) {
             return (Long)insert(user);
         } else {
-            return ((LoginUser)update(user)).getOid();
+            return ((AuthorizationUser)update(user)).getOid();
         }
     }
 
@@ -63,13 +63,13 @@ public class LoginUserDao extends HibernateDao implements ILoginUserDao {
      * load user by username.
      *
      * @param username  user name
-     * @return LoginUser
+     * @return AuthorizationUser
      */
-    public LoginUser loadUserByUsername(final String username) {
-    	DetachedCriteria criteria = DetachedCriteria.forClass(LoginUser.class);
+    public AuthorizationUser loadUserByUsername(final String username) {
+    	DetachedCriteria criteria = DetachedCriteria.forClass(AuthorizationUser.class);
         criteria.add(eq("username", username));
 
-        List<LoginUser> list = (List<LoginUser>) findByCriteria(criteria);
+        List<AuthorizationUser> list = (List<AuthorizationUser>) findByCriteria(criteria);
         if (list == null) {
             return null;
         }
@@ -78,30 +78,30 @@ public class LoginUserDao extends HibernateDao implements ILoginUserDao {
     }
 
     /*
-    public List<LoginUser> findUserByUserID(String userID, Long excluedOid) {
-    	DetachedCriteria criteria = DetachedCriteria.forClass(LoginUser.class);
+    public List<AuthorizationUser> findUserByUserID(String userID, Long excluedOid) {
+    	DetachedCriteria criteria = DetachedCriteria.forClass(AuthorizationUser.class);
         criteria.add(eq(SystemConsts.FieldUser.UserID, userID));
         if (excluedOid != null && excluedOid > 0){
             criteria.add(ne(SystemConsts.FieldUser.Oid, excluedOid));
         }
 		
-        return (List<LoginUser>)findAllByCriteria(criteria);
+        return (List<AuthorizationUser>)findAllByCriteria(criteria);
     }*/
 
     /**
      * list user base on the query params.
      *
-     * @param queryParams LoginUserQueryParams
+     * @param queryParams AuthorizationUserQueryParams
      * @return SearchResult
-    public SearchResult listUsers(LoginUserQueryParams queryParams) {
+    public SearchResult listUsers(AuthorizationUserQueryParams queryParams) {
         return findPageByCriteriaRootOnly(createUserCriteria(queryParams), queryParams.getRowsPerPage(), queryParams.getStartIndex());
     }
      */
 
     /*
-    protected DetachedCriteriaWithOrder createUserCriteria(LoginUserQueryParams queryParams) {
+    protected DetachedCriteriaWithOrder createUserCriteria(AuthorizationUserQueryParams queryParams) {
         DetachedCriteriaWithOrder criteria = null;
-        criteria = CriteriaHelper.createCriteria(queryParams, LoginUser.class);
+        criteria = CriteriaHelper.createCriteria(queryParams, AuthorizationUser.class);
         DetachedCriteriaExt deCriteria = criteria.getDetachedCriteria();
 
         if (queryParams.getRegionOid() != null && !queryParams.getRegionOid().equals(Long.parseLong("0"))) {
@@ -138,4 +138,4 @@ public class LoginUserDao extends HibernateDao implements ILoginUserDao {
         return criteria;
     }
     */
-} // END: LoginUserDao
+} // END: AuthorizationUserDao

@@ -69,10 +69,10 @@ public class UserTest {
      */
     @Test
     public void testAddUser() throws Exception {
-        ILoginUserService userService = (ILoginUserService) _context.getBean("DBLoginUserService");
+        IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
 
 /*
-        LoginUser u1 = new LoginUser();
+        AuthorizationUser u1 = new AuthorizationUser();
         u1.setUsername("danny");
         u1.setPassword("danny");
         u1.setSalt("salt");
@@ -91,19 +91,19 @@ public class UserTest {
         session.save(u1);
 */
 
-        LoginUser u2 = (LoginUser) userService.loadUserByUsername("wuhao");
+        AuthorizationUser u2 = (AuthorizationUser) userService.loadUserByUsername("wuhao");
 
         System.out.println("------ query user --------");
         System.out.println(u2);
 
         u2.setUsername("wuhao");
         u2.setLastUpdate(new Date());
-        u2.setLastUpdater("qingf");
+        u2.setLastUpdater("zhangbo");
         u2.setIsActive(true);
         userService.saveUser(u2);
 
         System.out.println("------ updated user --------");
-        LoginUser u3 = (LoginUser) userService.loadUserByUsername("wuhao");
+        AuthorizationUser u3 = (AuthorizationUser) userService.loadUserByUsername("wuhao");
         System.out.println(u3);
     }
 } // END: UserTest
