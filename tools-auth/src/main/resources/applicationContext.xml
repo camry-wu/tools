@@ -117,4 +117,7 @@
 
 	<bean id="DBAuthorizationUserService" class="net.vitular.tools.auth.DBAuthorizationUserService">
 	</bean>
+
+	<bean id="mockUserSupport" class="net.vitular.tools.auth.MockUserSupport">
+	</bean>
 </beans>

@@ -152,7 +152,7 @@ import javax.persistence.Version;
 /**
  * Base Obj.
  *
- * @author wuhao
+ * @author camry
  * @version $Revision$
  *          $Date$
  */

@@ -12,10 +12,13 @@ package net.vitular.tools.auth;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import org.apache.commons.lang3.StringUtils;
 
 //import org.springframework.dao.DataAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +63,9 @@ public class DBAuthorizationUserService implements IAuthorizationUserService {
      */
     public AuthorizationUser loadUserByUsername(String username) throws UnknownAccountException {
         AuthorizationUser user = _authorizationUserDao.loadUserByUsername(username);
-        /*
-        user.setSalt("123");
-        PasswordHelper.encryptPassword(user);
-        System.out.println("pwd:" + user.getPassword());
-        */
+        if (user == null) {
+            throw new UnknownAccountException();
+        }
 
         return user;
     }
@@ -76,6 +77,35 @@ public class DBAuthorizationUserService implements IAuthorizationUserService {
      * @return user oid
      */
     public Long saveUser(final AuthorizationUser user) {
+        // new user
+        if (user.getOid() == 0) {
+            String password = user.getPassword();
+            if (StringUtils.isEmpty(password)) {
+                password = "";
+            }
+
+            // encrypt password
+            PasswordUtils.encryptPassword(user, password);
+
+            // active user
+            user.setIsActive(true);
+            user.setLocked(false);
+        }
+        //else edit user
+
+        return _authorizationUserDao.saveUser(user);
+    }
+
+    /**
+     * change user password.
+     *
+     * @param username  user name
+     * @param password  password
+     * @return user oid
+     */
+    public Long updatePassword(final String username, final String password) {
+        AuthorizationUser user = _authorizationUserDao.loadUserByUsername(username);
+        PasswordUtils.encryptPassword(user, password);
         return _authorizationUserDao.saveUser(user);
     }
 } // END: DBAuthorizationUserService

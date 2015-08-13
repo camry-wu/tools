@@ -24,20 +24,20 @@ import net.vitular.tools.common.dao.SearchResult;
 public interface IAuthorizationUserDao {
 
     /**
+     * save user to db.
+     *
+     * @param user      AuthorizationUser
+     * @return user oid
+     */
+    public Long saveUser(final AuthorizationUser user);
+
+    /**
      * get user by oid.
      *
      * @param oid user oid
      * @return AuthorizationUser
     public AuthorizationUser getUserByOid(final Long oid);
      */
-
-    /**
-     * save user to db.
-     *
-     * @param user AuthorizationUser
-     * @return user oid
-     */
-    public Long saveUser(final AuthorizationUser user);
 
     /**
      * load user by username.

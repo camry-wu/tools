@@ -36,6 +36,20 @@ import net.vitular.tools.common.dao.HibernateDao;
 public class AuthorizationUserDao extends HibernateDao implements IAuthorizationUserDao {
 
     /**
+     * save user to db.
+     *
+     * @param user      AuthorizationUser
+     * @return user oid
+     */
+    public Long saveUser(final AuthorizationUser user) {
+        if (user.getOid() == 0) {
+            return (Long) insert(user);
+        } else {
+            return ((AuthorizationUser) update(user)).getOid();
+        }
+    }
+
+    /**
      * get user by oid.
      *
      * @param oid user oid
@@ -44,20 +58,6 @@ public class AuthorizationUserDao extends HibernateDao implements IAuthorization
         return (AuthorizationUser) find(AuthorizationUser.class, oid);
     }
      */
-	
-    /**
-     * save user to db.
-     *
-     * @param user AuthorizationUser
-     * @return user oid
-     */
-    public Long saveUser(final AuthorizationUser user) {
-        if (user.getOid() == 0) {
-            return (Long)insert(user);
-        } else {
-            return ((AuthorizationUser)update(user)).getOid();
-        }
-    }
 
     /**
      * load user by username.
@@ -70,7 +70,7 @@ public class AuthorizationUserDao extends HibernateDao implements IAuthorization
         criteria.add(eq("username", username));
 
         List<AuthorizationUser> list = (List<AuthorizationUser>) findByCriteria(criteria);
-        if (list == null) {
+        if (list == null || list.isEmpty()) {
             return null;
         }
 

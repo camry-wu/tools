@@ -48,10 +48,20 @@ public interface IAuthorizationUserService {
     /**
      * save user to db.
      *
-     * @param user AuthorizationUser
+     * @param user      AuthorizationUser
      * @return user oid
      */
     @Transactional(propagation=Propagation.REQUIRED)
     public Long saveUser(final AuthorizationUser user);
+
+    /**
+     * change user password.
+     *
+     * @param username  user name
+     * @param password  password
+     * @return user oid
+     */
+    @Transactional(propagation=Propagation.REQUIRED)
+    public Long updatePassword(final String username, final String password);
 } // END: IAuthorizationUserService
 ///:~

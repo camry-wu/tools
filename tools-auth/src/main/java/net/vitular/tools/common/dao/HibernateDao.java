@@ -1,6 +1,7 @@
 package net.vitular.tools.common.dao;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -9,15 +10,36 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.orm.hibernate4.HibernateCallback;
 import org.springframework.orm.hibernate4.support.HibernateDaoSupport;
+
+import net.vitular.tools.common.IUserSupport;
+import net.vitular.tools.common.domain.BaseObj;
 
 /**
  * Hibernate Dao
  * @author DL
  */
 public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
+
+    /**
+     * logger.
+     */
     protected Log logger = LogFactory.getLog(getClass());
+
+    /**
+     * user support.
+     */
+    @Autowired(required=true)
+    //@Qualifier("userSupport")
+    private IUserSupport _userSupport;
+
+    /**
+     * unknown updater username.
+     */
+    public static final String UNKNOWN_UPDATER = "*";
 
     private String SELECT_COUNT_START = "select count(*) ";
 
@@ -309,13 +331,41 @@ public class HibernateDao extends HibernateDaoSupport implements IDaoSupport {
         });
     }
 
+    /**
+     * get updater user name.
+     *
+     * @return the updater
+     */
+    private String getUpdater() {
+        String updater = _userSupport.getCurrentLoginUsername();
+
+        return (updater == null ? UNKNOWN_UPDATER : updater);
+    }
+
     public Object insert(Object obj)
     {
+        if (obj instanceof BaseObj) {
+
+            BaseObj bo = (BaseObj) obj;
+
+            // set last update info
+            bo.setLastUpdate(new Date());
+            bo.setLastUpdater(getUpdater());
+        }
+
         return getHibernateTemplate().save(obj);
     }
 
     public Object update(Object obj)
     {
+        if (obj instanceof BaseObj) {
+            BaseObj bo = (BaseObj) obj;
+
+            // set last update info
+            bo.setLastUpdate(new Date());
+            bo.setLastUpdater(getUpdater());
+        }
+
         getHibernateTemplate().update(obj);
         return obj;
     }

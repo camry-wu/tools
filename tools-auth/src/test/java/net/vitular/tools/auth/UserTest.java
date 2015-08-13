@@ -26,6 +26,8 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import org.apache.shiro.authc.UnknownAccountException;
+
 /**
  * test user module.
  *
@@ -71,40 +73,49 @@ public class UserTest {
     public void testAddUser() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
 
-/*
-        AuthorizationUser u1 = new AuthorizationUser();
-        u1.setUsername("danny");
-        u1.setPassword("danny");
-        u1.setSalt("salt");
-        u1.setLocked(false);
-        u1.setVerifyEmail("danny@163.com");
-        u1.setVerifyCellPhoneNo("13218033345");
-        u1.setIsActive(true);
+        AuthorizationUser au = new AuthorizationUser();
+        au.setUsername("danny");
+        au.setPassword("danny");
+        au.setVerifyEmail("da@163.com");
+        au.setVerifyCellPhoneNo("13218033346");
 
-        //u1.setVersion();
-        u1.setLastUpdate(new Date());
-        u1.setLastUpdater("admin");
+        userService.saveUser(au);
+    }
 
-        System.out.println("------ add user --------");
-        System.out.println(u1);
+    /**
+     * test method for update user.
+     */
+    @Test
+    public void testUpdateUser() throws Exception {
+        IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
+    }
 
-        session.save(u1);
-*/
+    /**
+     * test method for loadUserByUsername.
+     */
+    @Test
+    public void testLoadUserByUsername() throws Exception {
+        IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
+        try {
+            AuthorizationUser au = (AuthorizationUser) userService.loadUserByUsername("danny");
 
-        AuthorizationUser u2 = (AuthorizationUser) userService.loadUserByUsername("wuhao");
+            System.out.println("------ query user --------");
+            System.out.println(au);
+        } catch (UnknownAccountException e) {
+            System.out.println("donot find danny!");
+        }
+    }
 
-        System.out.println("------ query user --------");
-        System.out.println(u2);
+    /**
+     * test method for updatePassword.
+     */
+    @Test
+    public void testUpdatePassword() throws Exception {
+        IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
+        userService.updatePassword("wuhao", "345");
 
-        u2.setUsername("wuhao");
-        u2.setLastUpdate(new Date());
-        u2.setLastUpdater("zhangbo");
-        u2.setIsActive(true);
-        userService.saveUser(u2);
-
-        System.out.println("------ updated user --------");
-        AuthorizationUser u3 = (AuthorizationUser) userService.loadUserByUsername("wuhao");
-        System.out.println(u3);
+        AuthorizationUser au = (AuthorizationUser) userService.loadUserByUsername("wuhao");
+        System.out.println(au);
     }
 } // END: UserTest
 ///:~
