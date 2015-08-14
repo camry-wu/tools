@@ -46,11 +46,16 @@ public interface IAuthorizationUserService {
     public AuthorizationUser loadUserByUsername(final String username) throws UnknownAccountException;
 
     /**
-     * save user to db.
+     * save or update user.
      *
      * @param user      AuthorizationUser
      * @return user oid
      */
+    // @Permission(permission chain)
+    // @Trigger(trigger chain)
+    // @Validator(validator chain)
+    // @Audit
+    // @Cache(clear)
     @Transactional(propagation=Propagation.REQUIRED)
     public Long saveUser(final AuthorizationUser user);
 
@@ -63,5 +68,19 @@ public interface IAuthorizationUserService {
      */
     @Transactional(propagation=Propagation.REQUIRED)
     public Long updatePassword(final String username, final String password);
+
+    /**
+     * delete user.
+     *
+     * @param user      AuthorizationUser
+     */
+    @Transactional(propagation=Propagation.REQUIRED)
+    public void deleteUser(final AuthorizationUser user);
+
+    // public Long validate(final AuthorizationUser user);
+    // public Long invalidate(final AuthorizationUser user);
+
+    // public Long lock(final AuthorizationUser user);
+    // public Long unlock(final AuthorizationUser user);
 } // END: IAuthorizationUserService
 ///:~

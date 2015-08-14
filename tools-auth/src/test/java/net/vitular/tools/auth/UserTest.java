@@ -73,13 +73,16 @@ public class UserTest {
     public void testAddUser() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
 
+        // add
         AuthorizationUser au = new AuthorizationUser();
-        au.setUsername("danny");
-        au.setPassword("danny");
-        au.setVerifyEmail("da@163.com");
-        au.setVerifyCellPhoneNo("13218033346");
-
+        au.setUsername("testUser");
+        au.setPassword("testUser");
+        au.setVerifyEmail("testUser@163.com");
+        au.setVerifyCellPhoneNo("testUser-12345");
         userService.saveUser(au);
+
+        // delete
+        userService.deleteUser(au);
     }
 
     /**
@@ -88,6 +91,21 @@ public class UserTest {
     @Test
     public void testUpdateUser() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
+
+        // add
+        AuthorizationUser au = new AuthorizationUser();
+        au.setUsername("testUser");
+        au.setPassword("testUser");
+        au.setVerifyEmail("testUser@163.com");
+        au.setVerifyCellPhoneNo("testUser-12345");
+        userService.saveUser(au);
+
+        // update
+        au.setUsername("testUser2");
+        userService.saveUser(au);
+
+        // delete
+        userService.deleteUser(au);
     }
 
     /**

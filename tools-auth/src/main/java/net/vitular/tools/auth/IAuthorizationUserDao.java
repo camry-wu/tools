@@ -32,6 +32,13 @@ public interface IAuthorizationUserDao {
     public Long saveUser(final AuthorizationUser user);
 
     /**
+     * delete user.
+     *
+     * @param user      AuthorizationUser
+     */
+    public void deleteUser(final AuthorizationUser user);
+
+    /**
      * get user by oid.
      *
      * @param oid user oid

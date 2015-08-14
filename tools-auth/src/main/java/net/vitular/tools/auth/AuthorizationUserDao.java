@@ -50,6 +50,15 @@ public class AuthorizationUserDao extends HibernateDao implements IAuthorization
     }
 
     /**
+     * delete user.
+     *
+     * @param user      AuthorizationUser
+     */
+    public void deleteUser(final AuthorizationUser user) {
+        delete(user);
+    }
+
+    /**
      * get user by oid.
      *
      * @param oid user oid

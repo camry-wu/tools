@@ -108,5 +108,14 @@ public class DBAuthorizationUserService implements IAuthorizationUserService {
         PasswordUtils.encryptPassword(user, password);
         return _authorizationUserDao.saveUser(user);
     }
+
+    /**
+     * delete user.
+     *
+     * @param user      AuthorizationUser
+     */
+    public void deleteUser(final AuthorizationUser user) {
+        _authorizationUserDao.deleteUser(user);
+    }
 } // END: DBAuthorizationUserService
 ///:~
