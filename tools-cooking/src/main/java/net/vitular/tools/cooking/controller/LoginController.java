@@ -26,7 +26,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
-import net.vitular.tools.auth.LoginUser;
+import net.vitular.tools.auth.AuthorizationUser;
 
 /**
  * login controller.
@@ -75,7 +75,7 @@ public class LoginController extends BaseController {
 
         // add model data
 
-        mv.addObject("loginUser", new LoginUser("danny", "123"));
+        mv.addObject("loginUser", new AuthorizationUser("danny", "123"));
 
         // set logic viewer name
         mv.setViewName("login");
@@ -92,7 +92,7 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value="/login", method={RequestMethod.POST})
     public ModelAndView login(
-        @Validated(value=LoginUser.class) LoginUser user,
+        @Validated(value=AuthorizationUser.class) AuthorizationUser user,
         RedirectAttributes redirectAttributes) {
 
         Subject subject = SecurityUtils.getSubject();

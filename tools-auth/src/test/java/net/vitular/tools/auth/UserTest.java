@@ -130,9 +130,27 @@ public class UserTest {
     @Test
     public void testUpdatePassword() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
-        userService.updatePassword("wuhao", "345");
 
-        AuthorizationUser au = (AuthorizationUser) userService.loadUserByUsername("wuhao");
+        // find
+        try {
+            AuthorizationUser au = (AuthorizationUser) userService.loadUserByUsername("camry");
+        } catch (UnknownAccountException e) {
+            System.out.println("donot find camry!");
+
+            // add
+            AuthorizationUser au = new AuthorizationUser();
+            au.setUsername("camry");
+            au.setPassword("123");
+            au.setVerifyEmail("camry_camry@sina.com");
+            au.setVerifyCellPhoneNo("12345");
+            userService.saveUser(au);
+        }
+
+        // update password
+        userService.updatePassword("camry", "345");
+
+        // print
+        AuthorizationUser au = (AuthorizationUser) userService.loadUserByUsername("camry");
         System.out.println(au);
     }
 } // END: UserTest
