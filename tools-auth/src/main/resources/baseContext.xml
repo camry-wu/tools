@@ -4,14 +4,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
 	   http://www.springframework.org/schema/beans 
        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
 	   http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context-4.0.xsd 
-       http://www.springframework.org/schema/tx 
-       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
        http://www.springframework.org/schema/aop 
        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 
@@ -32,5 +29,69 @@
 			</list>
 		</property>
 	</bean>
+	
+	<!-- Advice -->
+	<bean id="operationPermissionAdvice" class="net.vitular.tools.common.aspect.OperationPermissionAdvice">
+	</bean>
+
+	<bean id="cacheAdvice" class="net.vitular.tools.common.aspect.CacheAdvice">
+	</bean>
+
+	<bean id="validatorAdvice" class="net.vitular.tools.common.aspect.ValidatorAdvice">
+	</bean>
+
+	<bean id="operationAuditAdvice" class="net.vitular.tools.common.aspect.OperationAuditAdvice">
+	</bean>
+
+	<bean id="triggerAdvice" class="net.vitular.tools.common.aspect.TriggerAdvice">
+	</bean>
+
+    <!--
+         aop order:
+         before: permission, validator
+         after: trigger
+         arround: audit, cache, transactional
+
+         1: transactional begin
+         2: permission
+         3: cache (if read)
+         4: validator (only write need)
+         5: audit (only write need)
+         6: do business
+         7: trigger (only write need)
+         8: audit (only write need)
+         9: cache (read: create; write: clear)
+         10: transactional end
+
+		 @annotation require the annotation declared in the concrete Class Method but not interface.
+    -->
+
+	<aop:config>
+		<aop:aspect ref="operationPermissionAdvice" order="2">
+			<aop:pointcut id="operationPermissionPointCut" expression="execution(public * net.vitular..*Service.*(..))"/>
+			<aop:before pointcut-ref="operationPermissionPointCut" method="check"/>
+		</aop:aspect>
+
+		<aop:aspect ref="cacheAdvice" order="3">
+			<!--<aop:pointcut id="cachePointCut" expression="execution(public * net.vitular..*Service.*(..)) and @annotation(net.vitular.tools.common.annotation.Cacheable)"/>-->
+			<aop:pointcut id="cachePointCut" expression="execution(public * net.vitular..*Service.*(..))"/>
+			<aop:around pointcut-ref="cachePointCut" method="cache"/>
+		</aop:aspect>
+
+		<aop:aspect ref="validatorAdvice" order="4">
+			<aop:pointcut id="validatorPointCut" expression="execution(public * net.vitular..*Service.*(..))"/>
+			<aop:before pointcut-ref="validatorPointCut" method="validate"/>
+		</aop:aspect>
+
+		<aop:aspect ref="operationAuditAdvice" order="5">
+			<aop:pointcut id="operationAuditPointCut" expression="execution(public * net.vitular..*Service.*(..))"/>
+			<aop:around pointcut-ref="operationAuditPointCut" method="audit"/>
+		</aop:aspect>
+
+		<aop:aspect ref="triggerAdvice" order="6">
+			<aop:pointcut id="triggerPointCut" expression="execution(public * net.vitular..*Service.*(..))"/>
+			<aop:after pointcut-ref="triggerPointCut" method="trigger"/>
+		</aop:aspect>
+	</aop:config>
 
 </beans>

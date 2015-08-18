@@ -1,21 +1,74 @@
+/*
+ * -----------------------------------------------------------
+ * file name  : OperationPermissionAdvice.java
+ * creator    : camry(camry_camry@sina.com)
+ * created    : Tue 18 Aug 2015 11:42:39 AM CST
+ *
+ * modifications:
+ *
+ * -----------------------------------------------------------
+ */
 package net.vitular.tools.common.aspect;
 
 import java.lang.reflect.Method;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
-//import com.framework.access.domain.IUserInfo;
-//import com.framework.exception.AccessException;
-//import com.framework.exception.FortiException;
+// import org.springframework.core.annotation.Order;
 
-@Aspect
-public class OperationPermissionAdvice
-{
-    private static final Logger logger = Logger.getLogger(OperationPermissionAdvice.class);
+import net.vitular.tools.common.annotation.OperationPermission;
+
+//import net.vitular.tools.auth.AuthorizationUser;
+//import net.vitular.tools.common.exception.AccessException;
+//import net.vitular.tools.common.exception.FortiException;
+
+/**
+ * Advice of OperationPermission.
+ *
+ * @author camry
+ * @version $Revision$
+ *          $Date$
+ */
+public class OperationPermissionAdvice {
+
+    /**
+     * logger.
+     */
+    protected Log _logger = LogFactory.getLog(getClass());
+
+    /**
+     * check user permission.
+     *
+     * @param joinPoint aspect join point
+     * @throws AccessException
+     */
+    @SuppressWarnings("unchecked")
+    public void check(final JoinPoint joinPoint) /*throws AccessException*/ {
+
+        Method targetMethod = AspectUtils.getJoinPointMethod(joinPoint);
+        if (targetMethod == null) {
+            return;
+        }
+
+        if (_logger.isDebugEnabled()) {
+            _logger.debug(String.format("check permission for %s.%s.", targetMethod.getDeclaringClass().getName(), targetMethod.getName()));
+        }
+
+        OperationPermission neededPermissions = targetMethod.getAnnotation(OperationPermission.class);
+        if (neededPermissions != null) {
+            if (_logger.isDebugEnabled()) {
+                _logger.debug(String.format("need permission: %s", java.util.Arrays.toString(neededPermissions.permissions())));
+            }
+        }
+    }
+
 /*
     @SuppressWarnings("unchecked")
     @Around(value="execution(* com..bizservice.*Facade.*(..))")
@@ -108,4 +161,4 @@ public class OperationPermissionAdvice
         logger.debug("sig.getDeclaringType()=" + sig.getDeclaringType());
     }
         */
-}
+} // END: OperationPermissionAdvice

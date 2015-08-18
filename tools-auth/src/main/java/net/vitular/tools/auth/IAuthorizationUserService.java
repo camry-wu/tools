@@ -15,6 +15,12 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.vitular.tools.common.annotation.Cacheable;
+import net.vitular.tools.common.annotation.OperationAudit;
+import net.vitular.tools.common.annotation.OperationPermission;
+import net.vitular.tools.common.annotation.Trigger;
+import net.vitular.tools.common.annotation.Validator;
+
 /**
  * user details service.
  *
@@ -43,6 +49,12 @@ public interface IAuthorizationUserService {
      * @return
      * @throws UnknownAccountException
      */
+    @Transactional(propagation=Propagation.REQUIRED)
+    @OperationPermission(permissions={"p1", "p2"})
+    @Cacheable(cacheName="c1")
+    @Validator("v1")
+    @OperationAudit(auditeeVarName="a1")
+    @Trigger("t1")
     public AuthorizationUser loadUserByUsername(final String username) throws UnknownAccountException;
 
     /**
