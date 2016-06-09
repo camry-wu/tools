@@ -1,6 +1,6 @@
 /*
  * -----------------------------------------------------------
- * file name  : OperationPermission.java
+ * file name  : Trigger.java
  * creator    : camry(camry_camry@sina.com)
  * created    : Sat 15 Aug 2015 16:00:39 PM CST
  *
@@ -17,13 +17,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Permission Information for Aspect.
+ * annotation for Trigger method.
  *
  * @author camry
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface OperationPermission {
-    String[] permissions();
+public @interface Trigger {
+    String value();
 }

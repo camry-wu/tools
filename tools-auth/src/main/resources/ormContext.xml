@@ -72,23 +72,6 @@
 	<tx:annotation-driven transaction-manager="transactionManager" order="1"/>
 	<aop:aspectj-autoproxy />
 
-    <!--
-         aop order:
-         before: permission, validator
-         after: trigger, audit
-         arround: cache, transactional
-
-         1: transactional begin
-         2: permission
-         3: cache (if read)
-         4: validator (only write need)
-         5: do business
-         6: trigger (only write need)
-         7: audit (only write need)
-         8: cache (read: create; write: clear)
-         9: transactional end
-    -->
-
 	<!-- config tx -->
 	<!--
 		<bean id="persistenceExceptionTranslationPostProcessor" class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>

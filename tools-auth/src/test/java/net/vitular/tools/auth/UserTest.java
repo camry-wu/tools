@@ -69,7 +69,7 @@ public class UserTest {
     /**
      * test method for add user.
      */
-    @Test
+    //@Test
     public void testAddUser() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
 
@@ -88,7 +88,7 @@ public class UserTest {
     /**
      * test method for update user.
      */
-    @Test
+    //@Test
     public void testUpdateUser() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
 
@@ -127,7 +127,7 @@ public class UserTest {
     /**
      * test method for updatePassword.
      */
-    @Test
+    //@Test
     public void testUpdatePassword() throws Exception {
         IAuthorizationUserService userService = (IAuthorizationUserService) _context.getBean("DBAuthorizationUserService");
 
