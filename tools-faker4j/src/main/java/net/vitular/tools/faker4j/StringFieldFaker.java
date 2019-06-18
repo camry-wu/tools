@@ -45,6 +45,14 @@ public class StringFieldFaker extends AbstractFieldFaker {
     private int _iByteSize;
 
     /**
+     * string case: U | L | F
+     * U: upper
+     * L: lower
+     * F: free, normal is free
+     */
+    private String _sCase = "F";
+
+    /**
      * get the generated field value.
      *
      * @return the field value
@@ -78,8 +86,20 @@ public class StringFieldFaker extends AbstractFieldFaker {
         String format = fakerExpression.getFormat();
         if (format != null) {
             Scanner sc = new Scanner(format);
-            if (sc.hasNextInt()) {
-                _iByteSize = sc.nextInt();
+            if (sc.hasNext()) {
+                if (sc.hasNextInt()) {
+                    _iByteSize = sc.nextInt();
+                } else {
+                    _sCase = sc.next().toUpperCase();
+                }
+            }
+
+            if (sc.hasNext()) {
+                if (sc.hasNextInt()) {
+                    _iByteSize = sc.nextInt();
+                } else {
+                    _sCase = sc.next().toUpperCase();
+                }
             }
             sc.close();
         }
@@ -108,24 +128,39 @@ public class StringFieldFaker extends AbstractFieldFaker {
 
     /**
      * get random value.
+     * ascii: 48 - 57 is 0 - 9
+     *        65 - 90 is A - Z
+     *        97 - 122 is a - z
      *
      * @return the random value
      */
     protected Object generateRandomValue() {
         StringBuffer ret = new StringBuffer("");
-        int size = 26;
+        int size = 123 - 48;
 
         for (int i = 0; i < _iLength; i++) {
-            double off = Math.random() * 33;
+            double off = Math.random() * size;
             double mi = Math.pow(10, 2);
 
             int tmp = (int) (getSeed() * mi + off);
             tmp = tmp % size;
-            tmp += 97;
+            tmp += 48;
+            if (tmp > 57 && tmp < 65) {
+                tmp -= 9;
+            }
+            if (tmp > 90 && tmp < 97) {
+                tmp -= 8;
+            }
             ret.append((char)tmp);
         }
 
-        _value = ret.toString();
+        if ("U".equals(_sCase)) {
+            _value = ret.toString().toUpperCase();
+        } else if ("L".equals(_sCase)) {
+            _value = ret.toString().toLowerCase();
+        } else {
+            _value = ret.toString();
+        }
 
         return _value;
     }
