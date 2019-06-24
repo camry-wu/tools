@@ -11,6 +11,7 @@
  */
 package net.vitular.tools.faker4j;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -38,6 +39,11 @@ public class CompositeFieldFaker extends AbstractFieldFaker {
      * list of fields.
      */
     private List<IFieldFaker> _fieldFakerList;
+
+    /**
+     * message format.
+     */
+    private MessageFormat _msgFormat = null;
 
     /**
      * field's value.
@@ -82,6 +88,11 @@ public class CompositeFieldFaker extends AbstractFieldFaker {
             IFieldFaker fieldFaker = FakerFactory.createFieldFaker(fieldName, _fakerContext);
             _fieldFakerList.add(fieldFaker);
         }
+
+        String format = fakerExpression.getFormat();
+        if (format != null && !format.equals("")) {
+            _msgFormat = new MessageFormat(format);
+        }
     }
 
     /**
@@ -113,6 +124,7 @@ public class CompositeFieldFaker extends AbstractFieldFaker {
     protected Object generateRandomValue() {
         StringBuffer ret = new StringBuffer("");
 
+        List<String> value_list = new ArrayList<String>();
         for (int i = 0; i < _iFieldsSize; i++) {
             IFieldFaker fieldFaker = _fieldFakerList.get(i);
 
@@ -129,9 +141,14 @@ public class CompositeFieldFaker extends AbstractFieldFaker {
 
             // concatenates field value
             ret.append(fieldValue);
+            value_list.add(fieldValue);
         }
 
-        _value = ret.toString();
+        if (_msgFormat != null) {
+            _value = _msgFormat.format(value_list.toArray());
+        } else {
+            _value = ret.toString();
+        }
 
         return _value;
     }
