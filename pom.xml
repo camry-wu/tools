@@ -232,7 +232,7 @@
 				<groupId>org.quartz-scheduler</groupId>
 				<artifactId>quartz</artifactId>
 				<!--<version>2.2.1</version>-->
-				<version>1.8.5</version>	<!-- for shiro -->
+				<version>2.3.2</version>	<!-- for shiro -->
 			</dependency>
 
 			<!-- shiro -->
